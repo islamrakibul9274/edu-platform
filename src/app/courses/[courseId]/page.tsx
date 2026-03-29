@@ -36,10 +36,10 @@ export default async function CourseDetailsPage({ params }: { params: Promise<{ 
   // 4. Check if this specific course ID exists in their enrolledCourses array
   // const isEnrolled = currentUser?.enrolledCourses?.includes(courseId);
   // We use .some() to check if any of the IDs, when converted to a string, match our URL courseId!
-  const isEnrolled = currentUser?.enrolledCourses?.some(id => id.toString() === courseId);
+  const isEnrolled = currentUser?.enrolledCourses?.some((id: any) => id.toString() === courseId);
 
   // Add this new line to check if they finished it:
-  const isCompleted = currentUser?.completedCourses?.some(id => id.toString() === courseId);
+  const isCompleted = currentUser?.completedCourses?.some((id: any) => id.toString() === courseId);
   return (
     <main className="max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-8">
 
