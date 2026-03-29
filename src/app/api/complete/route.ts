@@ -7,15 +7,17 @@ import { authOptions } from "@/lib/auth";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
+    
+    // UPDATE: Explicitly check for session, session.user, and the custom id
+    if (!session || !session.user || !(session.user as any).id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const { courseId } = await req.json();
     await connectToDatabase();
 
-    // Use $addToSet so they can't mark it completed multiple times
-    await User.findByIdAndUpdate(session.user.id, {
+    // UPDATE: Safely cast the ID
+    await User.findByIdAndUpdate((session.user as any).id, {
       $addToSet: { completedCourses: courseId }
     });
 
