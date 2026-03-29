@@ -7,31 +7,31 @@ import { BookOpen, Trophy, Clock, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
-import Course from "@/models/Course"; 
+import Course from "@/models/Course";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session || !session.user) {
     redirect("/login");
   }
 
   await connectToDatabase();
-  
-  const currentUser = await User.findById(session.user.id).populate({
+
+  const currentUser = await User.findById((session.user as any).id).populate({
     path: "enrolledCourses",
     model: Course
   });
 
   const user = session.user;
   const enrolledCourses = currentUser?.enrolledCourses || [];
-  
+
   // NEW: Grab the completed courses array so we can count it!
   const completedCourses = currentUser?.completedCourses || [];
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-12 space-y-8">
-      
+
       {/* Welcome Banner */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
         <div className="flex items-center gap-6">
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
       {/* Dynamic Enrolled Courses Grid */}
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Your Learning Journey</h2>
-        
+
         {enrolledCourses.length === 0 ? (
           <div className="text-center py-16 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl">
             <h3 className="text-xl font-semibold text-slate-700 mb-2">You haven't enrolled in any courses yet!</h3>
@@ -113,7 +113,7 @@ export default async function DashboardPage() {
                       COMPLETED
                     </div>
                   )}
-                  
+
                   <CardHeader>
                     <CardTitle className="text-lg text-blue-600 line-clamp-1 pr-6">{course.title}</CardTitle>
                     <CardDescription className="text-slate-500 mt-1 line-clamp-2">{course.description}</CardDescription>

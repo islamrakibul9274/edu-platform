@@ -12,12 +12,11 @@ import EnrollButton from "@/components/EnrollButton";
 import MarkCompleteButton from "@/components/MarkCompleteButton";
 
 export default async function CourseDetailsPage({ params }: { params: Promise<{ courseId: string }> }) {
-  // 1. Ensure they are logged in
+  // 1. Ensure they are logged in AND have a user object attached
   const session = await getServerSession(authOptions);
-  if (!session) {
+  if (!session || !session.user) {
     redirect("/login");
   }
-
   const { courseId } = await params;
 
   if (!mongoose.Types.ObjectId.isValid(courseId)) {
@@ -32,9 +31,8 @@ export default async function CourseDetailsPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  // 3. ENROLLMENT LOGIC: Fetch the current user to see their enrolled courses
-  const currentUser = await User.findById(session.user.id);
-
+  // Safely cast the user to access the custom ID
+  const currentUser = await User.findById((session.user as any).id);
   // 4. Check if this specific course ID exists in their enrolledCourses array
   // const isEnrolled = currentUser?.enrolledCourses?.includes(courseId);
   // We use .some() to check if any of the IDs, when converted to a string, match our URL courseId!
