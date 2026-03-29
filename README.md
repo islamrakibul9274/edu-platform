@@ -30,6 +30,7 @@ If you want to run this project locally, follow these steps:
 git clone [https://github.com/yourusername/edu-platform.git](https://github.com/yourusername/edu-platform.git)
 cd edu-platform
 
+```
 
 
 **2. Install dependencies**
