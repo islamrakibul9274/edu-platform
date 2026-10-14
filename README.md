@@ -4,6 +4,9 @@ A production-grade, full-stack Learning Management System (LMS) engineered for s
 
 Designed with a strict **2026 Dark Obsidian & Precision Technical Aesthetic** — zero purple/violet gradients, hairline borders, monospace telemetry tags, and responsive engineering layouts.
 
+**🌐 Live Production Deployment:** [https://edu-platform-s6x6.vercel.app](https://edu-platform-s6x6.vercel.app)  
+*(Backup/Mirror: [https://edu-platform-rumel9274-6063s-projects.vercel.app](https://edu-platform-rumel9274-6063s-projects.vercel.app))*
+
 ---
 
 ## ⚡ Core Highlights & Capabilities
