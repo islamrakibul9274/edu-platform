@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Terminal, ShieldCheck, Cpu } from "lucide-react";
+import { GraduationCap, ShieldCheck, Cpu } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="space-y-4 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 text-zinc-100">
               <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200">
-                <Terminal className="w-4 h-4" />
+                <GraduationCap className="w-4 h-4" />
               </div>
               <span className="font-bold text-base tracking-tight">
                 EduPlatform

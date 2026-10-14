@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Menu, X, BookOpen, LayoutDashboard, Command } from "lucide-react";
+import { GraduationCap, Menu, X, BookOpen, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LogoutButton from "@/components/LogoutButton";
 
@@ -34,17 +34,17 @@ export default function Navbar({ session }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-15 items-center justify-between">
           
-          {/* Brand Logo - 2026 Minimalist Technical Brand */}
+          {/* Brand Logo - 2026 Technical Graduation Cap */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-mono font-black text-sm group-hover:bg-zinc-200 transition-colors">
-              <Terminal className="w-4 h-4 text-zinc-950" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center shadow-sm group-hover:bg-zinc-200 transition-colors">
+              <GraduationCap className="w-4 h-4 text-zinc-950" />
             </div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-base tracking-tight text-zinc-100 group-hover:text-white transition-colors">
                 EduPlatform
               </span>
               <span className="mono-tag text-zinc-400 bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">
-                v2.6
+                PRO
               </span>
             </div>
           </Link>
@@ -60,7 +60,7 @@ export default function Navbar({ session }: NavbarProps) {
                   href={link.href}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isActive
-                      ? "text-zinc-100 bg-zinc-900 border border-zinc-850"
+                      ? "text-zinc-100 bg-zinc-900 border border-zinc-800"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50"
                   }`}
                 >
@@ -143,7 +143,7 @@ export default function Navbar({ session }: NavbarProps) {
           <div className="pt-3 border-t border-zinc-900">
             {session ? (
               <div className="space-y-2">
-                <div className="flex items-center gap-2.5 px-3 py-2 bg-zinc-900/60 border border-zinc-850 rounded-lg">
+                <div className="flex items-center gap-2.5 px-3 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg">
                   <div className="w-7 h-7 rounded-md bg-zinc-800 text-zinc-200 font-bold text-xs flex items-center justify-center">
                     {initial}
                   </div>

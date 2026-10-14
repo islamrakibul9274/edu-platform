@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Terminal, Eye, EyeOff, ShieldCheck, Check } from "lucide-react";
+import { GraduationCap, Eye, EyeOff, ShieldCheck, Check } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -48,8 +48,8 @@ export default function RegisterPage() {
         <div className="hidden lg:flex flex-col justify-between p-10 bg-zinc-950 border-r border-zinc-850 text-zinc-100 relative">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-mono font-bold text-xs">
-                <Terminal className="w-4 h-4 text-zinc-950" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-bold">
+                <GraduationCap className="w-4 h-4 text-zinc-950" />
               </div>
               <span className="font-bold text-base tracking-tight">EduPlatform</span>
             </Link>

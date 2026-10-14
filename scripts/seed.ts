@@ -89,7 +89,7 @@ async function seed() {
         "Implement end-to-end authentication with NextAuth and encrypted sessions",
         "Architect database models with Mongoose, indexing, and optimistic updates",
         "Deploy globally with Vercel edge networks, CI/CD, and custom domains",
-        "Build production-grade responsive UI with Tailwind CSS v4 and Shadcn"
+        "Build production-grade responsive UI with Tailwind CSS v4 and Radix UI"
       ],
       prerequisites: [
         "Basic understanding of modern JavaScript (ES6+)",
@@ -102,26 +102,26 @@ async function seed() {
           lessons: [
             {
               id: "next-m1-l1",
-              title: "Course Overview & Project Architecture",
+              title: "Next.js in 100 Seconds & Architecture Overview",
               duration: "08:30",
-              videoUrl: "https://www.youtube.com/embed/wm5gMKuwSYk",
-              summary: "Deep-dive into modern Next.js App Router, SSR, Turbopack, and project structure.",
+              videoUrl: "https://www.youtube.com/embed/Sklc_fQBmcs",
+              summary: "A high-yield introduction to Next.js full-stack capabilities, SSR, and project anatomy.",
               isFreePreview: true
             },
             {
               id: "next-m1-l2",
-              title: "Setting Up Development Environment & Tailwind v4",
+              title: "App Router & TypeScript Foundations",
               duration: "14:15",
-              videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-              summary: "Configure modern tooling, linting, Tailwind 4 theme tokens, and component directories.",
+              videoUrl: "https://www.youtube.com/embed/ZVnjOPwW4ZA",
+              summary: "Configure development tooling, directory structure, layout files, and page routing.",
               isFreePreview: false
             },
             {
               id: "next-m1-l3",
               title: "Server Components vs. Client Components Demystified",
               duration: "18:40",
-              videoUrl: "https://www.youtube.com/embed/wm5gMKuwSYk",
-              summary: "Understand the React Server Component boundary, hydration, and streaming with Suspense.",
+              videoUrl: "https://www.youtube.com/embed/843nec-IvW0",
+              summary: "Understand React Server Components, client boundaries, hydration, and streaming.",
               isFreePreview: false
             }
           ]
@@ -154,7 +154,7 @@ async function seed() {
               id: "next-m3-l1",
               title: "NextAuth Credentials Provider & Password Hashing",
               duration: "25:00",
-              videoUrl: "https://www.youtube.com/embed/wm5gMKuwSYk",
+              videoUrl: "https://www.youtube.com/embed/w2h54xz6Ndw",
               summary: "Set up JWT-based session tokens, bcrypt password hashing, and middleware guards.",
               isFreePreview: false
             },
@@ -171,85 +171,94 @@ async function seed() {
       ]
     },
     {
-      title: "Computer Vision & Deep Learning with YOLOv8",
-      description: "Build real-world object detection, segmentation, and tracking pipelines with Python, PyTorch, and YOLOv8 for industrial automation.",
+      title: "The Complete YOLO Masterclass: From YOLOv5 to YOLO11",
+      description: "Master the entire YOLO ecosystem (v5, v8, v9, v10, and YOLO11). Train custom models, build real-time multi-object tracking pipelines, implement instance segmentation, and benchmark edge performance with TensorRT.",
       level: "Advanced",
       category: "Artificial Intelligence",
       thumbnail: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=1200&q=80",
-      duration: "11h 20m",
-      rating: 4.95,
-      reviewCount: 289,
-      enrolledCount: 980,
-      videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
+      duration: "12h 30m",
+      rating: 4.96,
+      reviewCount: 310,
+      enrolledCount: 1150,
+      videoUrl: "https://www.youtube.com/embed/Z-65nqxUdl4",
       instructor: {
         name: "Dr. Elena Rostov",
         role: "AI Research Scientist & Vision Engineer",
         avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-        bio: "PhD in Machine Perception. Published author in IEEE CVPR with 10+ years in robotics and computer vision."
+        bio: "PhD in Machine Perception. Published author in IEEE CVPR with 10+ years deploying vision models across autonomous robotics and edge hardware."
       },
       learningOutcomes: [
-        "Train customized YOLOv8 models on custom datasets using Roboflow and PyTorch",
-        "Implement real-time object tracking with ByteTrack and DeepSORT",
-        "Export models to ONNX and TensorRT for low-latency edge deployment",
-        "Build web-based inference dashboards using FastAPI and WebRTC"
+        "Understand the architectural evolution from anchor-based YOLOv5 to NMS-free YOLOv10 and YOLO11",
+        "Train and fine-tune custom vision models on PyTorch, Roboflow datasets, and Google Colab GPUs",
+        "Implement real-time object tracking with ByteTrack, DeepSORT, and human pose estimation",
+        "Benchmark inference latency across CPU, CUDA, ONNX Runtime, and NVIDIA TensorRT engines",
+        "Deploy production vision services using FastAPI, WebRTC, and edge hardware"
       ],
       prerequisites: [
         "Intermediate Python programming proficiency",
-        "Basic understanding of matrix math and neural network concepts"
+        "Basic understanding of neural network layers and matrix operations"
       ],
-      tags: ["YOLOv8", "PyTorch", "Computer Vision", "Python", "Deep Learning"],
+      tags: ["YOLO11", "YOLOv10", "YOLOv8", "Computer Vision", "PyTorch", "Deep Learning", "TensorRT"],
       modules: [
         {
-          title: "Module 1: Vision Fundamentals & YOLO Architecture",
+          title: "Module 1: The YOLO Evolution & Architecture",
           lessons: [
             {
               id: "yolo-m1-l1",
-              title: "Introduction to Modern Convolutional Perception",
-              duration: "12:15",
-              videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
-              summary: "Explore anchor-free detection, C2f modules, and feature pyramid networks.",
+              title: "YOLO Evolution & Architecture: Detection, Classification & Pose",
+              duration: "18:20",
+              videoUrl: "https://www.youtube.com/embed/Z-65nqxUdl4",
+              summary: "A deep architectural breakdown covering anchor-based vs. anchor-free paradigms and C2f/C3k2 modules.",
               isFreePreview: true
             },
             {
               id: "yolo-m1-l2",
-              title: "Preparing Custom Datasets & Bounding Box Annotation",
-              duration: "19:40",
-              videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
-              summary: "Clean, augment, and export custom datasets using Roboflow format.",
+              title: "Ultralytics YOLO11 for Real-Time Object Detection & Tracking",
+              duration: "21:40",
+              videoUrl: "https://www.youtube.com/embed/-JXwa-WlkU8",
+              summary: "Setting up Ultralytics YOLO11, model weights selection, and running live webcam inference.",
               isFreePreview: false
             }
           ]
         },
         {
-          title: "Module 2: Model Training & Hyperparameter Tuning",
+          title: "Module 2: Custom Dataset Training & Fine-Tuning",
           lessons: [
             {
               id: "yolo-m2-l1",
-              title: "Fine-Tuning YOLOv8 on GPU Accelerators",
-              duration: "24:30",
-              videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
-              summary: "Run distributed training runs, log mAP metrics, and prevent overfitting.",
+              title: "Training YOLOv10 on Custom Datasets - Complete Guide",
+              duration: "25:30",
+              videoUrl: "https://www.youtube.com/embed/PfQwNe0P-G4",
+              summary: "NMS-free training, dual label assignments, loss functions, and custom dataset training runs.",
               isFreePreview: false
             },
             {
               id: "yolo-m2-l2",
-              title: "Instance Segmentation & Pose Estimation",
-              duration: "28:10",
-              videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
-              summary: "Extend detection into polygon mask segmentation and human pose keypoints.",
+              title: "Dataset Preparation & Augmentation with YOLOv8/v9",
+              duration: "19:15",
+              videoUrl: "https://www.youtube.com/embed/wuZtUMEiKWY",
+              summary: "Bounding box annotations, Roboflow export formats, Mosaic augmentations, and validation checks.",
               isFreePreview: false
             }
           ]
         },
         {
-          title: "Module 3: Edge Inference & Production Deployment",
+          title: "Module 3: Segmentation & Edge Benchmarking",
           lessons: [
             {
               id: "yolo-m3-l1",
-              title: "Exporting to TensorRT & Real-Time Video Streaming",
+              title: "Real-Time Instance Segmentation & Polygon Masks",
+              duration: "14:10",
+              videoUrl: "https://www.youtube.com/embed/pFiGSrRtaU4",
+              summary: "Pixel-level object segmentation, mask extraction, and area contour calculations.",
+              isFreePreview: false
+            },
+            {
+              id: "yolo-m3-l2",
+              title: "Benchmarking YOLO Models & Hardware Acceleration (ONNX & TensorRT)",
               duration: "22:50",
-              videoUrl: "https://www.youtube.com/embed/m9OSBJaQTlM",
-              summary: "Achieve 60+ FPS on edge hardware using FP16 quantization and TensorRT engine.",
+              videoUrl: "https://www.youtube.com/embed/rEQlAaevEFc",
+              summary: "Compare YOLOv8, v10, and YOLO11 throughput, mAP, and export to FP16 TensorRT for 60+ FPS.",
               isFreePreview: false
             }
           ]
@@ -290,39 +299,39 @@ async function seed() {
           lessons: [
             {
               id: "ds-m1-l1",
-              title: "Data Manipulation Masterclass with Pandas",
+              title: "Complete Python Pandas Data Science Tutorial",
               duration: "16:20",
-              videoUrl: "https://www.youtube.com/embed/LHBE6Q9XlzI",
-              summary: "Advanced grouping, merging, pivoting, and handling missing data.",
+              videoUrl: "https://www.youtube.com/embed/vmEHCJofslg",
+              summary: "Reading CSV/Excel files, sorting, filtering, groupby, and data wrangling.",
               isFreePreview: true
             },
             {
               id: "ds-m1-l2",
-              title: "Vectorized Operations with NumPy",
+              title: "Python NumPy Tutorial for Beginners",
               duration: "14:50",
-              videoUrl: "https://www.youtube.com/embed/LHBE6Q9XlzI",
-              summary: "Broadcasting rules, multidimensional slicing, and performance optimization.",
+              videoUrl: "https://www.youtube.com/embed/QUT1VHiLmmI",
+              summary: "Array operations, broadcasting rules, multidimensional slicing, and performance optimization.",
               isFreePreview: false
             }
           ]
         },
         {
-          title: "Module 2: Machine Learning Modeling",
+          title: "Module 2: Machine Learning & Visualization",
           lessons: [
             {
               id: "ds-m2-l1",
-              title: "Supervised Learning: Regressors & Classifiers",
+              title: "Data Analysis with Python - Machine Learning & Statistics",
               duration: "26:40",
-              videoUrl: "https://www.youtube.com/embed/LHBE6Q9XlzI",
-              summary: "Feature engineering, cross-validation, and ROC-AUC evaluation.",
+              videoUrl: "https://www.youtube.com/embed/r-uOLxNrNk8",
+              summary: "Feature engineering, cross-validation, and predictive modeling.",
               isFreePreview: false
             },
             {
               id: "ds-m2-l2",
-              title: "Building an Interactive Portfolio Dashboard",
+              title: "Data Visualization & Interactive Dashboard Building",
               duration: "21:15",
-              videoUrl: "https://www.youtube.com/embed/LHBE6Q9XlzI",
-              summary: "Package your insights into an interactive Streamlit application.",
+              videoUrl: "https://www.youtube.com/embed/GPVsHOlRBBI",
+              summary: "Visual storytelling with Matplotlib, Seaborn, and dashboard deployments.",
               isFreePreview: false
             }
           ]
@@ -363,18 +372,18 @@ async function seed() {
           lessons: [
             {
               id: "k8s-m1-l1",
-              title: "Production Docker Mastery & Security Hardening",
+              title: "Docker Tutorial for Beginners - Full DevOps Course",
               duration: "18:00",
-              videoUrl: "https://www.youtube.com/embed/X48VuDVv0do",
-              summary: "Non-root containers, multi-stage builds, and vulnerability scanning.",
+              videoUrl: "https://www.youtube.com/embed/fqMOX6JJhGo",
+              summary: "Learn how to containerize applications, manage layers, and optimize image size.",
               isFreePreview: true
             },
             {
               id: "k8s-m1-l2",
-              title: "Kubernetes Core Architecture & Pod Lifecycle",
-              duration: "25:30",
-              videoUrl: "https://www.youtube.com/embed/X48VuDVv0do",
-              summary: "Control plane components, kubelet, kube-proxy, and etcd.",
+              title: "What is Kubernetes | Architecture Explained",
+              duration: "15:30",
+              videoUrl: "https://www.youtube.com/embed/VnvRFRk_51k",
+              summary: "Control plane components, kubelet, kube-proxy, pods, and cluster networking.",
               isFreePreview: false
             }
           ]
@@ -384,18 +393,18 @@ async function seed() {
           lessons: [
             {
               id: "k8s-m2-l1",
-              title: "Packaging Applications with Helm Charts",
+              title: "Kubernetes Services & Ingress Routing",
               duration: "22:15",
               videoUrl: "https://www.youtube.com/embed/X48VuDVv0do",
-              summary: "Template variables, release management, and repository hosting.",
+              summary: "Expose cluster pods with ClusterIP, NodePort, LoadBalancer, and Ingress controllers.",
               isFreePreview: false
             },
             {
               id: "k8s-m2-l2",
-              title: "Automated Deployments with ArgoCD",
+              title: "Docker and Kubernetes Full Course Production Guide",
               duration: "27:40",
-              videoUrl: "https://www.youtube.com/embed/X48VuDVv0do",
-              summary: "Sync policies, drift detection, and rollback strategies.",
+              videoUrl: "https://www.youtube.com/embed/Wf2eSG3owoA",
+              summary: "Declarative orchestration, automated rollouts, and rollback strategies.",
               isFreePreview: false
             }
           ]
@@ -412,7 +421,7 @@ async function seed() {
       rating: 4.86,
       reviewCount: 167,
       enrolledCount: 910,
-      videoUrl: "https://www.youtube.com/embed/c8I_VjC_Xm0",
+      videoUrl: "https://www.youtube.com/embed/ft30zcMlFao",
       instructor: {
         name: "Amara Okonjo",
         role: "Design Systems Lead",
@@ -423,7 +432,7 @@ async function seed() {
         "Build cohesive Figma design token libraries (colors, typography, spacing)",
         "Bridge Figma tokens directly into Tailwind CSS v4 variables",
         "Implement keyboard navigation and screen-reader accessibility",
-        "Create micro-interactions with Framer Motion and modern CSS"
+        "Create micro-interactions with modern CSS and animation frameworks"
       ],
       prerequisites: [
         "No previous design experience required",
@@ -436,18 +445,18 @@ async function seed() {
           lessons: [
             {
               id: "ui-m1-l1",
-              title: "The Anatomy of a Modern Design System",
+              title: "Tokens, Variables, and Styles - Introduction to Design Systems",
               duration: "13:20",
-              videoUrl: "https://www.youtube.com/embed/c8I_VjC_Xm0",
+              videoUrl: "https://www.youtube.com/embed/JyCmacSyDY4",
               summary: "Primitive tokens, semantic tokens, and component-specific variables.",
               isFreePreview: true
             },
             {
               id: "ui-m1-l2",
-              title: "Typography Scales & Color Harmony in OKLCH",
+              title: "Build a Design System - Figma Tokens & Variables Setup",
               duration: "17:40",
-              videoUrl: "https://www.youtube.com/embed/c8I_VjC_Xm0",
-              summary: "Perceptually uniform color spaces and responsive type ramps.",
+              videoUrl: "https://www.youtube.com/embed/HNJmWKndUA4",
+              summary: "Set up design tokens in Figma for automatic handoff to front-end engineering.",
               isFreePreview: false
             }
           ]
@@ -457,10 +466,18 @@ async function seed() {
           lessons: [
             {
               id: "ui-m2-l1",
-              title: "Accessible Dialogs, Dropdowns & Tooltips",
+              title: "Tailwind Crash Course - Project From Scratch",
               duration: "24:10",
-              videoUrl: "https://www.youtube.com/embed/c8I_VjC_Xm0",
-              summary: "Focus trapping, ARIA live regions, and Radix UI primitives.",
+              videoUrl: "https://www.youtube.com/embed/dFgzHOX84xQ",
+              summary: "Tokenizing utility classes and building reusable components.",
+              isFreePreview: false
+            },
+            {
+              id: "ui-m2-l2",
+              title: "Ultimate Tailwind CSS Tutorial - Build Animated UI",
+              duration: "20:30",
+              videoUrl: "https://www.youtube.com/embed/pfaSUYaSgRo",
+              summary: "Interactive states, hover animations, and micro-interactions.",
               isFreePreview: false
             }
           ]
@@ -501,31 +518,39 @@ async function seed() {
           lessons: [
             {
               id: "rn-m1-l1",
-              title: "Starting with Expo 52 & Native Modules",
+              title: "React Native Tutorial for Beginners - Build a Mobile App",
               duration: "15:40",
               videoUrl: "https://www.youtube.com/embed/0-S5a0eXPoc",
-              summary: "Project scaffolding, Metro bundler, and real-device live reload.",
+              summary: "Scaffolding mobile projects, simulated environments, and core component architecture.",
               isFreePreview: true
             },
             {
               id: "rn-m1-l2",
-              title: "Expo Router: Tabs, Stacks & Modals",
+              title: "Introduction to Expo Router Layout Files",
               duration: "21:30",
-              videoUrl: "https://www.youtube.com/embed/0-S5a0eXPoc",
-              summary: "Deep linking, tab bar styling, and native sheet transitions.",
+              videoUrl: "https://www.youtube.com/embed/Yh6Qlg2CYwQ",
+              summary: "File-based mobile navigation, header configuration, and tab bars.",
               isFreePreview: false
             }
           ]
         },
         {
-          title: "Module 2: Gesture Handlers & Native Storage",
+          title: "Module 2: Navigation & Full-Stack Deployment",
           lessons: [
             {
               id: "rn-m2-l1",
-              title: "Fluid Micro-Interactions with Reanimated 3",
+              title: "Using a Stack Navigator with Expo Router",
               duration: "26:50",
-              videoUrl: "https://www.youtube.com/embed/0-S5a0eXPoc",
-              summary: "Pan gestures, spring physics, and 60FPS UI thread animations.",
+              videoUrl: "https://www.youtube.com/embed/izZv6a99Roo",
+              summary: "Stack transitions, push/pop routes, and modal presentation.",
+              isFreePreview: false
+            },
+            {
+              id: "rn-m2-l2",
+              title: "React Native Course in 2024 - Full Stack Mobile App",
+              duration: "28:10",
+              videoUrl: "https://www.youtube.com/embed/ZBCUegTZF7M",
+              summary: "Backend integration, state management, and production store deployment.",
               isFreePreview: false
             }
           ]
@@ -558,37 +583,46 @@ async function seed() {
       ]
     },
     {
-      courseId: inserted[0]._id.toString(),
-      lessonId: inserted[0].modules[0].lessons[1].id,
-      userName: "Sophia Zhao",
+      courseId: inserted[1]._id.toString(),
+      lessonId: inserted[1].modules[0].lessons[1].id,
+      userName: "David Kim",
       userRole: "Student",
-      userAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
-      title: "Tailwind v4 theme variables configuration tip",
-      content: "If you're using CSS variables with @theme, remember to wrap the custom colors in var()! This solved my dark mode token issue.",
-      upvotes: 14,
-      replies: []
+      userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+      title: "YOLO11 vs YOLOv10 latency comparison on edge GPUs",
+      content: "Has anyone benchmarked YOLO11 against YOLOv10 on an NVIDIA Jetson Orin Nano? What mAP improvement did you observe?",
+      upvotes: 11,
+      replies: [
+        {
+          userName: "Dr. Elena Rostov",
+          userRole: "Instructor",
+          userAvatar: inserted[1].instructor.avatar,
+          content: "In our lab benchmarks, YOLO11-nano achieves ~18% faster inference latency over YOLOv10 while maintaining a +1.4% mAP gain on the COCO validation set. The C3k2 modules reduce FLOPs significantly.",
+          createdAt: new Date(Date.now() - 3600000 * 2)
+        }
+      ]
     }
   ];
 
   await Discussion.insertMany(sampleDiscussions);
   console.log("Inserted sample discussions!");
 
-  // Also auto-enroll existing users into the first two courses so their dashboard has instant activity!
+  // Auto-enroll demo user and existing users into Next.js & Complete YOLO
   const User = mongoose.models.User || mongoose.model("User", new mongoose.Schema({
+    name: String, email: String, password: String, role: String,
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
     completedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
     completedLessons: [{ courseId: String, lessonId: String }],
-    certificates: [{ courseId: String, courseTitle: String, issueDate: Date, certificateId: String }]
+    certificates: [{ courseId: String, courseTitle: String, issueDate: Date, certificateId: String }],
+    streak: Object
   }));
 
   const users = await User.find({});
   for (const u of users) {
     u.enrolledCourses = [inserted[0]._id, inserted[1]._id];
-    u.completedCourses = [inserted[1]._id]; // YOLOv8 completed
+    u.completedCourses = [inserted[1]._id];
     u.completedLessons = [
       { courseId: inserted[0]._id.toString(), lessonId: inserted[0].modules[0].lessons[0].id },
       { courseId: inserted[0]._id.toString(), lessonId: inserted[0].modules[0].lessons[1].id },
-      // All lessons for YOLOv8
       ...inserted[1].modules.flatMap((m: any) => m.lessons.map((l: any) => ({ courseId: inserted[1]._id.toString(), lessonId: l.id })))
     ];
     u.certificates = [
@@ -596,7 +630,7 @@ async function seed() {
         courseId: inserted[1]._id.toString(),
         courseTitle: inserted[1].title,
         issueDate: new Date("2026-04-05"),
-        certificateId: `CERT-YOLO8-9412`
+        certificateId: `CERT-YOLO-MASTER-9412`
       }
     ];
     await u.save();
