@@ -20,8 +20,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { connectToDatabase } from "@/lib/mongodb";
 import Course from "@/models/Course";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function Home() {
+  const session = await getServerSession(authOptions);
   await connectToDatabase();
   const featuredCourses = await Course.find({}).limit(3).lean();
 
@@ -89,17 +92,35 @@ export default async function Home() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
-              <Button asChild size="lg" className="w-full sm:w-auto h-11 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg shadow-sm">
-                <Link href="/courses">
-                  Explore Curricula
-                  <ArrowRight className="w-3.5 h-3.5 ml-2" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto h-11 px-6 bg-zinc-900/80 border-zinc-800 text-zinc-300 hover:bg-zinc-850 hover:text-white font-medium text-xs rounded-lg">
-                <Link href="/dashboard">
-                  Student Dashboard
-                </Link>
-              </Button>
+              {session?.user ? (
+                <>
+                  <Button asChild size="lg" className="w-full sm:w-auto h-11 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg shadow-sm">
+                    <Link href="/courses">
+                      Explore Curricula
+                      <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="w-full sm:w-auto h-11 px-6 bg-zinc-900/80 border-zinc-800 text-zinc-300 hover:bg-zinc-850 hover:text-white font-medium text-xs rounded-lg">
+                    <Link href="/dashboard">
+                      Student Dashboard
+                    </Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild size="lg" className="w-full sm:w-auto h-11 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg shadow-sm">
+                    <Link href="/register">
+                      Start Learning Free
+                      <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="w-full sm:w-auto h-11 px-6 bg-zinc-900/80 border-zinc-800 text-zinc-300 hover:bg-zinc-850 hover:text-white font-medium text-xs rounded-lg">
+                    <Link href="/login">
+                      Sign In
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             {/* Trust specs */}
@@ -377,24 +398,44 @@ export default async function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 mono-tag text-zinc-400">
             <Terminal className="w-3.5 h-3.5" />
-            <span>READY TO SHIP PRODUCTION CODE</span>
+            <span>{session?.user ? "STUDENT CONSOLE // ACTIVE" : "READY TO SHIP PRODUCTION CODE"}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Start mastering modern engineering today.
+            {session?.user 
+              ? "Continue your engineering journey." 
+              : "Start mastering modern engineering today."}
           </h2>
 
           <p className="text-sm text-zinc-400 max-w-lg mx-auto">
-            Zero subscription walls for core tracks. Join thousands of developers building scalable systems.
+            {session?.user 
+              ? "Resume your enrolled tracks, complete pending architectural milestones, and inspect new curricula."
+              : "Zero subscription walls for core tracks. Join thousands of developers building scalable systems."}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <Button asChild size="lg" className="h-10 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg">
-              <Link href="/register">Create Free Account</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="h-10 px-6 bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white text-xs rounded-lg">
-              <Link href="/courses">Browse Curricula</Link>
-            </Button>
+            {session?.user ? (
+              <>
+                <Button asChild size="lg" className="h-10 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg">
+                  <Link href="/dashboard">
+                    Go to Dashboard
+                    <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="h-10 px-6 bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white text-xs rounded-lg">
+                  <Link href="/courses">Browse Curricula</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild size="lg" className="h-10 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg">
+                  <Link href="/register">Create Free Account</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="h-10 px-6 bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white text-xs rounded-lg">
+                  <Link href="/login">Sign In</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </section>

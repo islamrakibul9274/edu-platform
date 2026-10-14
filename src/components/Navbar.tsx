@@ -43,9 +43,11 @@ export default function Navbar({ session }: NavbarProps) {
               <span className="font-bold text-base tracking-tight text-zinc-100 group-hover:text-white transition-colors">
                 EduPlatform
               </span>
-              <span className="mono-tag text-zinc-400 bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded">
-                PRO
-              </span>
+              {session?.user && (
+                <span className="mono-tag text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-1.5 py-0.5 rounded text-[10px] font-semibold">
+                  PRO
+                </span>
+              )}
             </div>
           </Link>
 
