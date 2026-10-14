@@ -22,7 +22,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={`${inter.className} ${mono.variable} min-h-screen flex flex-col bg-[#09090b] text-zinc-100 antialiased selection:bg-zinc-100 selection:text-zinc-950`} suppressHydrationWarning>
         <Navbar session={session} />
         <div className="flex-1">

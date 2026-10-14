@@ -39,7 +39,7 @@ export default function Navbar({ session }: NavbarProps) {
             <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center shadow-sm group-hover:bg-zinc-200 transition-colors">
               <GraduationCap className="w-4 h-4 text-zinc-950" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" suppressHydrationWarning>
               <span className="font-bold text-base tracking-tight text-zinc-100 group-hover:text-white transition-colors">
                 EduPlatform
               </span>
@@ -74,7 +74,7 @@ export default function Navbar({ session }: NavbarProps) {
           </nav>
 
           {/* Right Action Area */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3" suppressHydrationWarning>
             {session ? (
               <div className="flex items-center gap-3">
                 <Link
@@ -142,7 +142,7 @@ export default function Navbar({ session }: NavbarProps) {
             })}
           </div>
 
-          <div className="pt-3 border-t border-zinc-900">
+          <div className="pt-3 border-t border-zinc-900" suppressHydrationWarning>
             {session ? (
               <div className="space-y-2">
                 <div className="flex items-center gap-2.5 px-3 py-2 bg-zinc-900/60 border border-zinc-800 rounded-lg">

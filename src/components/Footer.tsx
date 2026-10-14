@@ -40,7 +40,7 @@ export default function Footer() {
             <h4 className="mono-tag text-zinc-300">Curricula</h4>
             <ul className="space-y-2 text-xs">
               <li><Link href="/courses" className="hover:text-zinc-200 transition-colors">Next.js 16 Full-Stack</Link></li>
-              <li><Link href="/courses" className="hover:text-zinc-200 transition-colors">Computer Vision YOLOv8</Link></li>
+              <li><Link href="/courses" className="hover:text-zinc-200 transition-colors">Complete YOLO Masterclass</Link></li>
               <li><Link href="/courses" className="hover:text-zinc-200 transition-colors">Python Data Science</Link></li>
               <li><Link href="/courses" className="hover:text-zinc-200 transition-colors">Kubernetes Cloud Native</Link></li>
             </ul>
@@ -82,7 +82,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-zinc-850 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
-          <p>© {new Date().getFullYear()} EduPlatform. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} EduPlatform. All rights reserved.</p>
           <div className="flex items-center gap-4 text-zinc-400">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" /> AES-256
