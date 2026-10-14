@@ -1,47 +1,68 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { connectToDatabase } from "@/lib/mongodb";
 import Course from "@/models/Course";
+import User from "@/models/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import CourseCatalog from "@/components/CourseCatalog";
+import { Sparkles } from "lucide-react";
 
 export default async function CoursesPage() {
-    // 1. Connect directly to MongoDB
-    await connectToDatabase();
-    const courses = await Course.find({});
+  await connectToDatabase();
+  const session = await getServerSession(authOptions);
 
-    return (
-        <main className="max-w-7xl mx-auto px-4 py-16">
-            <div className="mb-10">
-                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Available Courses</h1>
-                <p className="text-lg text-slate-600 mt-2">Level up your engineering skills today.</p>
-            </div>
+  const rawCourses = await Course.find({}).sort({ createdAt: -1 }).lean();
 
-            {/* The Course Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* 2. Map over the real MongoDB data */}
-                {courses.map((course) => (
-                    <Card key={course._id.toString()} className="border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-                        <CardHeader>
-                            <CardTitle className="text-xl text-blue-600">{course.title}</CardTitle>
-                            <CardDescription className="text-slate-500 mt-1">{course.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex flex-col flex-grow justify-end mt-4">
-                            <div className="flex justify-between items-center mb-4 text-sm font-medium text-slate-700">
-                                <span>Level:</span>
-                                <span className="bg-slate-100 px-2 py-1 rounded-md">{course.level}</span>
-                            </div>
-                            
-                            {/* 3. The perfectly wired Shadcn + Next.js Link */}
-                            <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                                <Link href={`/courses/${course._id.toString()}`}>
-                                    View Course
-                                </Link>
-                            </Button>
-                            
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </main>
-    );
+  let userEnrolledIds: string[] = [];
+  let userCompletedIds: string[] = [];
+
+  if (session && session.user && (session.user as any).id) {
+    const user = await User.findById((session.user as any).id).lean();
+    if (user) {
+      userEnrolledIds = (user.enrolledCourses || []).map((id: any) => id.toString());
+      userCompletedIds = (user.completedCourses || []).map((id: any) => id.toString());
+    }
+  }
+
+  // Format courses for client component serialization
+  const courses = rawCourses.map((c: any) => ({
+    _id: c._id.toString(),
+    title: c.title,
+    description: c.description,
+    level: c.level,
+    category: c.category || "Web Development",
+    thumbnail: c.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80",
+    duration: c.duration || "6h 30m",
+    rating: c.rating || 4.8,
+    reviewCount: c.reviewCount || 120,
+    enrolledCount: c.enrolledCount || 500,
+    instructor: c.instructor,
+    modules: c.modules || []
+  }));
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      
+      {/* Header Banner */}
+      <div className="mb-10 space-y-3">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Industry Curricula</span>
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+          Explore Production Courses
+        </h1>
+        <p className="text-base sm:text-lg text-slate-600 max-w-2xl">
+          Learn modern full-stack development, applied machine learning, cloud architecture, and cross-platform engineering with step-by-step guidance.
+        </p>
+      </div>
+
+      {/* Interactive Catalog Component */}
+      <CourseCatalog 
+        initialCourses={courses} 
+        userEnrolledIds={userEnrolledIds} 
+        userCompletedIds={userCompletedIds} 
+      />
+
+    </main>
+  );
 }
