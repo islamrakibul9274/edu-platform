@@ -8,23 +8,42 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     
-    // UPDATE: Explicitly check for session, session.user, and the custom id
     if (!session || !session.user || !(session.user as any).id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized. Please log in." }, { status: 401 });
     }
 
     const { courseId } = await req.json();
+    if (!courseId) {
+      return NextResponse.json({ message: "Missing courseId." }, { status: 400 });
+    }
+
     await connectToDatabase();
 
-    // UPDATE: Safely cast the ID
-    await User.findByIdAndUpdate((session.user as any).id, {
+    const userId = (session.user as any).id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json({ message: "User not found." }, { status: 404 });
+    }
+
+    // STRICT SECURITY: Must be enrolled to complete track
+    const isEnrolled = (user.enrolledCourses || []).some(
+      (id: any) => id.toString() === courseId
+    );
+    if (!isEnrolled) {
+      return NextResponse.json(
+        { message: "Access denied: You must be enrolled in this track to mark it as completed." },
+        { status: 403 }
+      );
+    }
+
+    await User.findByIdAndUpdate(userId, {
       $addToSet: { completedCourses: courseId }
     });
 
-    return NextResponse.json({ message: "Course marked as completed!" }, { status: 200 });
+    return NextResponse.json({ message: "Track marked as completed!" }, { status: 200 });
     
   } catch (error) {
     console.error("Completion Error:", error);
-    return NextResponse.json({ message: "Failed to update status" }, { status: 500 });
+    return NextResponse.json({ message: "Failed to update completion status." }, { status: 500 });
   }
 }

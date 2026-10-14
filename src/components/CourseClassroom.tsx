@@ -17,8 +17,10 @@ import {
   Printer, 
   X,
   ShieldCheck,
+  ShieldAlert,
   Terminal,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +30,7 @@ interface Lesson {
   id: string;
   title: string;
   duration: string;
-  videoUrl: string;
+  videoUrl?: string;
   summary?: string;
   isFreePreview?: boolean;
 }
@@ -75,7 +77,7 @@ interface CourseClassroomProps {
 
 export default function CourseClassroom({
   course,
-  isEnrolled,
+  isEnrolled: initialIsEnrolled,
   isCompleted,
   completedLessonIds: initialCompletedLessonIds,
   initialDiscussions,
@@ -84,7 +86,11 @@ export default function CourseClassroom({
 }: CourseClassroomProps) {
   const router = useRouter();
 
-  const allLessons = course.modules?.flatMap((m) => m.lessons) || [];
+  // STRICT ENROLLMENT & CURRICULUM STATE
+  const [enrolled, setEnrolled] = useState<boolean>(initialIsEnrolled);
+  const [currentModules, setCurrentModules] = useState<Module[]>(course.modules || []);
+  
+  const allLessons = currentModules.flatMap((m) => m.lessons) || [];
   
   const [activeLessonId, setActiveLessonId] = useState<string>(
     allLessons[0]?.id || "default"
@@ -103,10 +109,10 @@ export default function CourseClassroom({
   const [submittingQuestion, setSubmittingQuestion] = useState(false);
 
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0] || {
-    id: "preview",
+    id: "default",
     title: course.title,
     duration: "10:00",
-    videoUrl: course.videoUrl || "https://www.youtube.com/embed/wm5gMKuwSYk",
+    videoUrl: "",
     summary: course.description
   };
 
@@ -116,8 +122,17 @@ export default function CourseClassroom({
     ? Math.round((completedLessonIds.length / allLessons.length) * 100) 
     : (courseCompleted ? 100 : 0);
 
+  // Instantaneous unlock callback when enrollment finishes
+  const handleEnrollSuccess = (newModules?: any[]) => {
+    setEnrolled(true);
+    if (newModules && newModules.length > 0) {
+      setCurrentModules(newModules);
+    }
+    router.refresh();
+  };
+
   const handleToggleLessonComplete = async () => {
-    if (!isEnrolled || !currentUser) return;
+    if (!enrolled || !currentUser) return;
 
     try {
       const res = await fetch("/api/complete-lesson", {
@@ -141,13 +156,13 @@ export default function CourseClassroom({
         router.refresh();
       }
     } catch (err) {
-      console.error(err);
+      console.error("Lesson completion error:", err);
     }
   };
 
   const handlePostQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newQuestionTitle.trim() || !newQuestionContent.trim() || !currentUser) return;
+    if (!newQuestionTitle.trim() || !newQuestionContent.trim() || !currentUser || !enrolled) return;
 
     setSubmittingQuestion(true);
     try {
@@ -169,21 +184,22 @@ export default function CourseClassroom({
         setNewQuestionContent("");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Discussion submit error:", err);
     } finally {
       setSubmittingQuestion(false);
     }
   };
 
-  const getEmbedUrl = (url: string) => {
-    if (!url) return "https://www.youtube.com/embed/wm5gMKuwSYk";
+  const getEmbedUrl = (url?: string) => {
+    if (!url) return "";
     if (url.includes("embed/")) return url;
     if (url.includes("watch?v=")) return url.replace("watch?v=", "embed/");
     if (url.includes("youtu.be/")) return url.replace("youtu.be/", "www.youtube.com/embed/");
     return url;
   };
 
-  const isLessonAccessible = isEnrolled || activeLesson.isFreePreview;
+  // STRICT VIDEO STREAM SECURITY: Video is ONLY accessible if the student is enrolled
+  const isLessonAccessible = enrolled && Boolean(activeLesson.videoUrl);
 
   return (
     <div className="space-y-8">
@@ -195,11 +211,15 @@ export default function CourseClassroom({
             <Link href="/courses" className="hover:text-zinc-300 transition-colors">DIRECTORY</Link>
             <span>/</span>
             <span className="text-zinc-300">{course.category}</span>
+            <span>/</span>
+            <span className={enrolled ? "text-emerald-400 font-semibold" : "text-amber-400 font-semibold"}>
+              {enrolled ? "ENROLLED STUDENT" : "TRACK UNENROLLED"}
+            </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{course.title}</h1>
         </div>
 
-        {isEnrolled && (
+        {enrolled ? (
           <div className="flex items-center gap-4">
             <div className="text-right">
               <div className="mono-tag text-zinc-500">TRACK PROGRESS</div>
@@ -222,6 +242,16 @@ export default function CourseClassroom({
               </Button>
             )}
           </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="text-right hidden sm:block">
+              <div className="mono-tag text-amber-500">ACCESS RESTRICTED</div>
+              <div className="font-mono text-xs text-zinc-400">Enrollment Required</div>
+            </div>
+            <div className="w-48">
+              <EnrollButton courseId={course._id} onEnrolled={handleEnrollSuccess} size="sm" />
+            </div>
+          </div>
         )}
       </div>
 
@@ -231,8 +261,8 @@ export default function CourseClassroom({
         {/* Left 2 Columns: Video Player & Tabs */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* CINEMATIC VIDEO CONTAINER */}
-          <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-zinc-800 shadow-2xl">
+          {/* CINEMATIC VIDEO CONTAINER OR ULTRA-SECURE GATED SCREEN */}
+          <div className="relative aspect-video rounded-xl overflow-hidden bg-[#0c0c0e] border border-zinc-800 shadow-2xl">
             {isLessonAccessible ? (
               <iframe
                 src={`${getEmbedUrl(activeLesson.videoUrl)}?autoplay=0&rel=0&modestbranding=1`}
@@ -242,18 +272,80 @@ export default function CourseClassroom({
                 className="w-full h-full border-0"
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-white bg-zinc-950 space-y-4">
-                <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
-                  <Lock className="w-6 h-6 text-zinc-300" />
+              <div className="w-full h-full flex flex-col justify-between p-6 sm:p-8 bg-[#09090b] text-white">
+                
+                {/* Security Protocol Header */}
+                <div className="flex items-center justify-between border-b border-zinc-850 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="font-mono text-[11px] font-bold text-amber-400 tracking-wider">
+                      STREAM LOCKED
+                    </span>
+                    <span className="text-zinc-600 font-mono text-[11px]">|</span>
+                    <span className="font-mono text-[11px] text-zinc-400">
+                      ENROLLMENT VERIFICATION REQUIRED
+                    </span>
+                  </div>
+                  <span className="mono-tag text-zinc-500 hidden sm:inline-block">
+                    PROPRIETARY DRM STREAM
+                  </span>
                 </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">Lesson Locked</h3>
-                  <p className="text-xs text-zinc-400 mt-1 max-w-sm">
-                    Enroll in this track to access full lectures, solution repositories, and certification.
-                  </p>
+
+                {/* Center Content Gate */}
+                <div className="flex flex-col items-center justify-center text-center py-2 sm:py-4 space-y-4 max-w-lg mx-auto">
+                  <div className="relative">
+                    <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-zinc-900 border border-zinc-750 flex items-center justify-center text-zinc-300 shadow-xl">
+                      <Lock className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-200" />
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-zinc-950 border border-zinc-750 flex items-center justify-center">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-xl font-bold text-white tracking-tight">
+                      Enroll to Unlock Lecture Stream
+                    </h3>
+                    <p className="text-xs text-zinc-400 leading-relaxed max-w-md mx-auto">
+                      High-definition video walkthroughs, system diagrams, and interactive labs are reserved for enrolled students. Enroll now for instant access.
+                    </p>
+                  </div>
+
+                  {/* Feature checklist */}
+                  <div className="grid grid-cols-2 gap-2 w-full max-w-sm text-left pt-1">
+                    <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center gap-2 text-[11px] font-mono text-zinc-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>1080p Video Playback</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center gap-2 text-[11px] font-mono text-zinc-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Architecture Repos</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center gap-2 text-[11px] font-mono text-zinc-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Instructor Q&A</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center gap-2 text-[11px] font-mono text-zinc-300">
+                      <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Swiss-Style Credential</span>
+                    </div>
+                  </div>
+
+                  {/* Unlock Button */}
+                  <div className="w-full max-w-xs pt-1">
+                    <EnrollButton
+                      courseId={course._id}
+                      onEnrolled={handleEnrollSuccess}
+                      size="lg"
+                      className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-bold text-xs h-11 rounded-lg shadow-md transition-all"
+                    />
+                  </div>
                 </div>
-                <div className="w-full max-w-xs">
-                  <EnrollButton courseId={course._id} />
+
+                {/* Footer Security Watermark */}
+                <div className="flex items-center justify-between pt-2 border-t border-zinc-850/80 text-[10px] font-mono text-zinc-600">
+                  <span>TRACK // {course._id.slice(-6).toUpperCase()}</span>
+                  <span>SECURITY PROTOCOL ENFORCED</span>
                 </div>
               </div>
             )}
@@ -269,15 +361,15 @@ export default function CourseClassroom({
                 <h2 className="text-lg font-bold text-white mt-0.5">{activeLesson.title}</h2>
                 <div className="flex items-center gap-3 mono-tag text-zinc-400 mt-1">
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {activeLesson.duration}</span>
-                  {activeLesson.isFreePreview && (
-                    <span className="px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
-                      FREE PREVIEW
+                  {!enrolled && (
+                    <span className="px-1.5 py-0.2 rounded bg-zinc-950 text-amber-400 border border-amber-800/60 font-mono text-[10px]">
+                      ENROLLMENT REQUIRED
                     </span>
                   )}
                 </div>
               </div>
 
-              {isEnrolled && (
+              {enrolled && (
                 <Button
                   onClick={handleToggleLessonComplete}
                   size="sm"
@@ -390,7 +482,7 @@ export default function CourseClassroom({
           {/* TAB 2: CURRICULUM */}
           {activeTab === "curriculum" && (
             <div className="space-y-3">
-              {course.modules?.map((m, mIdx) => (
+              {currentModules.map((m, mIdx) => (
                 <div key={mIdx} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-bold text-white">{m.title}</h4>
@@ -399,25 +491,35 @@ export default function CourseClassroom({
                   <div className="space-y-1 pt-1">
                     {m.lessons.map((lesson) => {
                       const isDone = completedLessonIds.includes(lesson.id);
+                      const isSelected = activeLessonId === lesson.id;
                       return (
                         <div 
                           key={lesson.id} 
-                          onClick={() => (isEnrolled || lesson.isFreePreview) && setActiveLessonId(lesson.id)}
-                          className={`p-2.5 rounded-lg flex items-center justify-between transition-colors ${
-                            activeLessonId === lesson.id 
+                          onClick={() => setActiveLessonId(lesson.id)}
+                          className={`p-2.5 rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
+                            isSelected 
                               ? "bg-zinc-800 text-white" 
-                              : "hover:bg-zinc-850 cursor-pointer text-zinc-300"
+                              : "hover:bg-zinc-850 text-zinc-300"
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
                             {isDone ? (
                               <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : enrolled ? (
+                              <Play className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-zinc-500"}`} />
                             ) : (
-                              <Play className={`w-3.5 h-3.5 ${activeLessonId === lesson.id ? "text-white" : "text-zinc-500"}`} />
+                              <Lock className="w-3.5 h-3.5 text-zinc-500" />
                             )}
                             <span className="text-xs">{lesson.title}</span>
                           </div>
-                          <span className="mono-tag text-zinc-500">{lesson.duration}</span>
+                          <div className="flex items-center gap-2">
+                            {!enrolled && (
+                              <span className="px-1 py-0.2 rounded text-[9px] font-mono bg-zinc-850 text-zinc-500 border border-zinc-800">
+                                LOCKED
+                              </span>
+                            )}
+                            <span className="mono-tag text-zinc-500">{lesson.duration}</span>
+                          </div>
                         </div>
                       );
                     })}
@@ -430,55 +532,76 @@ export default function CourseClassroom({
           {/* TAB 3: DISCUSSIONS */}
           {activeTab === "discussions" && (
             <div className="space-y-4">
-              {currentUser ? (
-                <form onSubmit={handlePostQuestion} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
-                  <span className="mono-tag text-zinc-500 flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
-                    NEW DISCUSSION THREAD
-                  </span>
-                  <Input
-                    placeholder="Subject line..."
-                    value={newQuestionTitle}
-                    onChange={(e) => setNewQuestionTitle(e.target.value)}
-                    required
-                    className="bg-zinc-950 border-zinc-800 text-xs text-zinc-200"
-                  />
-                  <textarea
-                    placeholder="Provide technical context, reproduction steps, or code..."
-                    value={newQuestionContent}
-                    onChange={(e) => setNewQuestionContent(e.target.value)}
-                    required
-                    rows={3}
-                    className="w-full rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700"
-                  />
-                  <div className="flex justify-end">
-                    <Button 
-                      type="submit" 
-                      disabled={submittingQuestion} 
-                      size="sm"
-                      className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs"
-                    >
-                      <Send className="w-3 h-3 mr-1.5" />
-                      {submittingQuestion ? "Posting..." : "Submit Dispatch"}
-                    </Button>
-                  </div>
-                </form>
+              {enrolled ? (
+                currentUser ? (
+                  <form onSubmit={handlePostQuestion} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+                    <span className="mono-tag text-zinc-500 flex items-center gap-1.5">
+                      <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                      NEW DISCUSSION THREAD
+                    </span>
+                    <Input
+                      placeholder="Subject line..."
+                      value={newQuestionTitle}
+                      onChange={(e) => setNewQuestionTitle(e.target.value)}
+                      required
+                      className="bg-zinc-950 border-zinc-800 text-xs text-zinc-200"
+                    />
+                    <textarea
+                      placeholder="Provide technical context, reproduction steps, or code..."
+                      value={newQuestionContent}
+                      onChange={(e) => setNewQuestionContent(e.target.value)}
+                      required
+                      rows={3}
+                      className="w-full rounded-md border border-zinc-800 bg-zinc-950 p-3 text-xs text-zinc-200 focus:outline-hidden focus:border-zinc-700"
+                    />
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        disabled={submittingQuestion}
+                        size="sm"
+                        className="bg-zinc-100 hover:bg-zinc-200 text-zinc-950 text-xs font-semibold rounded-lg"
+                      >
+                        <Send className="w-3.5 h-3.5 mr-1.5" />
+                        {submittingQuestion ? "Posting..." : "Post to Community"}
+                      </Button>
+                    </div>
+                  </form>
+                ) : null
               ) : (
-                <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800 text-center mono-tag text-zinc-400">
-                  <Link href="/login" className="text-white underline">Sign in</Link> to post in classroom discussions.
+                <div className="p-6 rounded-xl bg-zinc-900/40 border border-zinc-800 text-center space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto text-zinc-400">
+                    <Lock className="w-5 h-5 text-zinc-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Community Q&A is Locked</h4>
+                    <p className="text-xs text-zinc-400 mt-1 max-w-sm mx-auto">
+                      Enroll in this track to participate in technical discussions, ask instructors questions, and collaborate with peers.
+                    </p>
+                  </div>
+                  <div className="max-w-xs mx-auto pt-1">
+                    <EnrollButton courseId={course._id} onEnrolled={handleEnrollSuccess} size="sm" />
+                  </div>
                 </div>
               )}
 
+              {/* Discussions List */}
               <div className="space-y-3">
                 {discussions.length === 0 ? (
-                  <p className="text-center py-8 mono-tag text-zinc-500">NO DISPATCHES RECORDED YET</p>
+                  <div className="p-8 text-center bg-zinc-900/30 rounded-xl border border-zinc-800/80">
+                    <p className="text-xs text-zinc-500">No discussion threads yet. Be the first to start a conversation!</p>
+                  </div>
                 ) : (
-                  discussions.map((d: any, idx: number) => (
-                    <div key={idx} className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2">
-                      <div className="flex items-center justify-between text-xs">
+                  discussions.map((d: any) => (
+                    <div key={d._id} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white text-xs">{d.userName}</span>
-                          <span className="mono-tag text-zinc-400 bg-zinc-800 px-1.5 py-0.2 rounded">
+                          <img
+                            src={d.userAvatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(d.userName)}`}
+                            alt={d.userName}
+                            className="w-6 h-6 rounded-full object-cover"
+                          />
+                          <span className="text-xs font-semibold text-zinc-200">{d.userName}</span>
+                          <span className="px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400 text-[10px] font-mono">
                             {d.userRole || "Student"}
                           </span>
                         </div>
@@ -487,15 +610,33 @@ export default function CourseClassroom({
                         </span>
                       </div>
 
-                      <h4 className="text-xs font-bold text-zinc-200">{d.title}</h4>
-                      <p className="text-xs text-zinc-400 leading-relaxed">{d.content}</p>
+                      <div>
+                        <h4 className="text-xs font-bold text-white">{d.title}</h4>
+                        <p className="text-xs text-zinc-300 mt-1 leading-relaxed">{d.content}</p>
+                      </div>
 
+                      {/* Replies */}
                       {d.replies && d.replies.length > 0 && (
-                        <div className="mt-3 pl-3 border-l border-zinc-700 space-y-2 pt-1">
+                        <div className="mt-3 pt-3 border-t border-zinc-850 space-y-2">
                           {d.replies.map((r: any, rIdx: number) => (
-                            <div key={rIdx} className="space-y-0.5">
-                              <span className="mono-tag text-zinc-300 font-bold">{r.userName} (Instructor)</span>
-                              <p className="text-xs text-zinc-400">{r.content}</p>
+                            <div key={rIdx} className="p-3 rounded-lg bg-zinc-950 border border-zinc-850 space-y-1">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <img
+                                    src={r.userAvatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.userName)}`}
+                                    alt={r.userName}
+                                    className="w-5 h-5 rounded-full object-cover"
+                                  />
+                                  <span className="text-xs font-medium text-zinc-300">{r.userName}</span>
+                                  <span className="px-1 py-0.2 rounded bg-zinc-850 text-emerald-400 text-[9px] font-mono">
+                                    {r.userRole || "Instructor"}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] font-mono text-zinc-500">
+                                  {new Date(r.createdAt).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <p className="text-xs text-zinc-400 pl-7">{r.content}</p>
                             </div>
                           ))}
                         </div>
@@ -520,9 +661,15 @@ export default function CourseClassroom({
                       <p className="mono-tag text-zinc-500">Reference manual (.pdf)</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="text-[11px] h-7 border-zinc-800 text-zinc-300">
-                    <Download className="w-3 h-3 mr-1" /> Export
-                  </Button>
+                  {enrolled ? (
+                    <Button variant="outline" size="sm" className="text-[11px] h-7 border-zinc-800 text-zinc-300 hover:text-white">
+                      <Download className="w-3 h-3 mr-1" /> Export
+                    </Button>
+                  ) : (
+                    <span className="text-[10px] font-mono text-zinc-500 px-2 py-1 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Enrolled Only
+                    </span>
+                  )}
                 </div>
 
                 <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center justify-between">
@@ -533,11 +680,17 @@ export default function CourseClassroom({
                       <p className="mono-tag text-zinc-500">Dockerfiles, unit tests, and CI workflows</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" asChild className="text-[11px] h-7 border-zinc-800 text-zinc-300">
-                    <a href="https://github.com/islamrakibul9274/edu-platform" target="_blank" rel="noopener noreferrer">
-                      View Code
-                    </a>
-                  </Button>
+                  {enrolled ? (
+                    <Button variant="outline" size="sm" asChild className="text-[11px] h-7 border-zinc-800 text-zinc-300 hover:text-white">
+                      <a href="https://github.com/islamrakibul9274/edu-platform" target="_blank" rel="noopener noreferrer">
+                        View Code
+                      </a>
+                    </Button>
+                  ) : (
+                    <span className="text-[10px] font-mono text-zinc-500 px-2 py-1 rounded bg-zinc-900 border border-zinc-800 flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Enrolled Only
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -552,16 +705,20 @@ export default function CourseClassroom({
               <div>
                 <h3 className="text-xs font-bold mono-tag text-zinc-300">CURRICULUM TREE</h3>
                 <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
-                  {completedLessonIds.length} / {allLessons.length} LECTURES
+                  {enrolled ? `${completedLessonIds.length} / ${allLessons.length} LECTURES` : "TRACK ACCESS LOCKED"}
                 </p>
               </div>
-              <span className="mono-tag px-2 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700">
-                {progressPercent}%
+              <span className={`mono-tag px-2 py-0.5 rounded border ${
+                enrolled 
+                  ? "bg-zinc-800 text-zinc-200 border-zinc-700" 
+                  : "bg-amber-950/80 text-amber-400 border-amber-800/60"
+              }`}>
+                {enrolled ? `${progressPercent}%` : "LOCKED"}
               </span>
             </div>
 
             <div className="p-2 space-y-4 max-h-[580px] overflow-y-auto">
-              {course.modules?.map((module, mIdx) => (
+              {currentModules.map((module, mIdx) => (
                 <div key={mIdx} className="space-y-1">
                   <div className="mono-tag text-zinc-500 px-2 py-1">
                     {module.title}
@@ -570,24 +727,23 @@ export default function CourseClassroom({
                     {module.lessons.map((lesson) => {
                       const isActive = activeLessonId === lesson.id;
                       const isCompleted = completedLessonIds.includes(lesson.id);
-                      const isUnlocked = isEnrolled || lesson.isFreePreview;
 
                       return (
                         <div
                           key={lesson.id}
-                          onClick={() => isUnlocked && setActiveLessonId(lesson.id)}
-                          className={`p-2 rounded-lg flex items-center justify-between text-xs transition-all ${
+                          onClick={() => setActiveLessonId(lesson.id)}
+                          className={`p-2 rounded-lg flex items-center justify-between text-xs transition-all cursor-pointer ${
                             isActive
                               ? "bg-zinc-800 text-white font-semibold"
-                              : isUnlocked
-                              ? "hover:bg-zinc-850 cursor-pointer text-zinc-300"
-                              : "opacity-40 cursor-not-allowed text-zinc-500"
+                              : enrolled
+                              ? "hover:bg-zinc-850 text-zinc-300"
+                              : "hover:bg-zinc-900/80 text-zinc-400"
                           }`}
                         >
                           <div className="flex items-center gap-2 truncate pr-2">
                             {isCompleted ? (
                               <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            ) : isUnlocked ? (
+                            ) : enrolled ? (
                               <Play className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-zinc-500"}`} />
                             ) : (
                               <Lock className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
@@ -595,7 +751,14 @@ export default function CourseClassroom({
                             <span className="truncate text-xs">{lesson.title}</span>
                           </div>
 
-                          <span className="mono-tag text-zinc-500 shrink-0">{lesson.duration}</span>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {!enrolled && (
+                              <span className="px-1 py-0.2 rounded text-[9px] font-mono bg-zinc-850 text-zinc-500 border border-zinc-800">
+                                LOCKED
+                              </span>
+                            )}
+                            <span className="mono-tag text-zinc-500">{lesson.duration}</span>
+                          </div>
                         </div>
                       );
                     })}
@@ -604,9 +767,9 @@ export default function CourseClassroom({
               ))}
             </div>
 
-            {!isEnrolled && (
+            {!enrolled && (
               <div className="p-3 bg-zinc-950 border-t border-zinc-800">
-                <EnrollButton courseId={course._id} />
+                <EnrollButton courseId={course._id} onEnrolled={handleEnrollSuccess} />
               </div>
             )}
           </div>

@@ -25,6 +25,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
+    // STRICT SECURITY: Must be enrolled to complete lessons in this track
+    const isEnrolled = (user.enrolledCourses || []).some(
+      (id: any) => id.toString() === courseId
+    );
+    if (!isEnrolled) {
+      return NextResponse.json(
+        { message: "Access denied: You must be enrolled in this track to record progress." },
+        { status: 403 }
+      );
+    }
+
     // Check if this lesson is already recorded
     const alreadyCompleted = user.completedLessons?.some(
       (item: any) => item.courseId === courseId && item.lessonId === lessonId

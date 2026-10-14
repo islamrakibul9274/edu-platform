@@ -3,26 +3,32 @@ import Course from "@/models/Course";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import CourseCatalog from "@/components/CourseCatalog";
 
 export default async function CoursesPage() {
-  await connectToDatabase();
   const session = await getServerSession(authOptions);
+
+  // STRICT SECURITY: Access to courses catalog requires active authentication
+  if (!session || !session.user || !(session.user as any).id) {
+    redirect("/login?callbackUrl=/courses");
+  }
+
+  await connectToDatabase();
 
   const rawCourses = await Course.find({}).sort({ createdAt: -1 }).lean();
 
   let userEnrolledIds: string[] = [];
   let userCompletedIds: string[] = [];
 
-  if (session && session.user && (session.user as any).id) {
-    const user = await User.findById((session.user as any).id).lean();
-    if (user) {
-      userEnrolledIds = (user.enrolledCourses || []).map((id: any) => id.toString());
-      userCompletedIds = (user.completedCourses || []).map((id: any) => id.toString());
-    }
+  const user = await User.findById((session.user as any).id).lean();
+  if (user) {
+    userEnrolledIds = (user.enrolledCourses || []).map((id: any) => id.toString());
+    userCompletedIds = (user.completedCourses || []).map((id: any) => id.toString());
   }
 
   // Deep sanitize to guarantee 100% plain objects across Server -> Client boundary
+  // Note: videoUrl is stripped from the catalog view for security
   const plainCourses = JSON.parse(JSON.stringify(rawCourses)).map((c: any) => ({
     _id: String(c._id),
     title: String(c.title || ""),
@@ -45,9 +51,7 @@ export default async function CoursesPage() {
         id: String(l.id || ""),
         title: String(l.title || ""),
         duration: String(l.duration || "10:00"),
-        videoUrl: String(l.videoUrl || ""),
-        summary: String(l.summary || ""),
-        isFreePreview: Boolean(l.isFreePreview)
+        summary: String(l.summary || "")
       }))
     }))
   }));
@@ -55,7 +59,12 @@ export default async function CoursesPage() {
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-10 space-y-2">
-        <span className="mono-tag text-zinc-500">ACADEMIC DIRECTORY</span>
+        <div className="flex items-center gap-2">
+          <span className="mono-tag text-zinc-500">ACADEMIC DIRECTORY</span>
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950/80 text-emerald-400 border border-emerald-800">
+            AUTHENTICATED // STUDENT ACCESS
+          </span>
+        </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
           Curricula & Tracks
         </h1>

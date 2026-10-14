@@ -105,7 +105,7 @@ export default async function Home() {
             {/* Trust specs */}
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-mono text-zinc-500">
               <span className="flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 text-zinc-300" /> Free Lesson Previews
+                <Check className="w-3.5 h-3.5 text-zinc-300" /> Protected HD Video Streams
               </span>
               <span className="flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-zinc-300" /> Verifiable Certificates

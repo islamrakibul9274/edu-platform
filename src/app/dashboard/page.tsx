@@ -10,7 +10,7 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user || !(session.user as any).id) {
-    redirect("/login");
+    redirect("/login?callbackUrl=/dashboard");
   }
 
   await connectToDatabase();
