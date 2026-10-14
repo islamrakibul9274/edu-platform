@@ -4,12 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
-  PlayCircle, 
-  CheckCircle2, 
+  Play, 
+  Check, 
   Lock, 
-  Unlock, 
-  ChevronRight, 
-  ChevronDown, 
   Clock, 
   Award, 
   MessageSquare, 
@@ -17,15 +14,13 @@ import {
   Download, 
   ExternalLink, 
   Send, 
-  Sparkles, 
   Printer, 
   X,
-  Share2,
-  BookOpen,
-  UserCheck
+  ShieldCheck,
+  Terminal,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import EnrollButton from "@/components/EnrollButton";
 
@@ -89,32 +84,24 @@ export default function CourseClassroom({
 }: CourseClassroomProps) {
   const router = useRouter();
 
-  // Flatten all lessons
   const allLessons = course.modules?.flatMap((m) => m.lessons) || [];
   
-  // Active lesson state
   const [activeLessonId, setActiveLessonId] = useState<string>(
     allLessons[0]?.id || "default"
   );
   
-  // Completed lessons state
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>(initialCompletedLessonIds || []);
   const [courseCompleted, setCourseCompleted] = useState<boolean>(isCompleted);
   const [certificateId, setCertificateId] = useState<string | null>(initialCertId || null);
 
-  // UI tabs state: 'overview' | 'curriculum' | 'discussions' | 'resources'
   const [activeTab, setActiveTab] = useState<"overview" | "curriculum" | "discussions" | "resources">("overview");
-
-  // Certificate Modal state
   const [showCertificate, setShowCertificate] = useState(false);
 
-  // Discussions state
   const [discussions, setDiscussions] = useState<any[]>(initialDiscussions || []);
   const [newQuestionTitle, setNewQuestionTitle] = useState("");
   const [newQuestionContent, setNewQuestionContent] = useState("");
   const [submittingQuestion, setSubmittingQuestion] = useState(false);
 
-  // Find active lesson object
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0] || {
     id: "preview",
     title: course.title,
@@ -125,12 +112,10 @@ export default function CourseClassroom({
 
   const isCurrentLessonCompleted = completedLessonIds.includes(activeLesson.id);
 
-  // Calculate progress %
   const progressPercent = allLessons.length > 0 
     ? Math.round((completedLessonIds.length / allLessons.length) * 100) 
     : (courseCompleted ? 100 : 0);
 
-  // Handle Mark Lesson Complete
   const handleToggleLessonComplete = async () => {
     if (!isEnrolled || !currentUser) return;
 
@@ -160,7 +145,6 @@ export default function CourseClassroom({
     }
   };
 
-  // Handle Post Question
   const handlePostQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newQuestionTitle.trim() || !newQuestionContent.trim() || !currentUser) return;
@@ -191,7 +175,6 @@ export default function CourseClassroom({
     }
   };
 
-  // Convert normal youtube link to embed format if needed
   const getEmbedUrl = (url: string) => {
     if (!url) return "https://www.youtube.com/embed/wm5gMKuwSYk";
     if (url.includes("embed/")) return url;
@@ -200,42 +183,42 @@ export default function CourseClassroom({
     return url;
   };
 
-  // Lesson accessible check
   const isLessonAccessible = isEnrolled || activeLesson.isFreePreview;
 
   return (
     <div className="space-y-8">
       
       {/* Top Banner Navigation & Progress */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl bg-zinc-900/60 border border-zinc-800">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
-            <Link href="/courses" className="hover:text-blue-600 transition-colors">Courses</Link>
+          <div className="flex items-center gap-2 mono-tag text-zinc-500 mb-1">
+            <Link href="/courses" className="hover:text-zinc-300 transition-colors">DIRECTORY</Link>
             <span>/</span>
-            <span className="text-blue-600">{course.category}</span>
+            <span className="text-zinc-300">{course.category}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">{course.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{course.title}</h1>
         </div>
 
         {isEnrolled && (
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <div className="text-xs font-semibold text-slate-500">Course Progress</div>
-              <div className="text-lg font-bold text-slate-900">{progressPercent}% Completed</div>
+              <div className="mono-tag text-zinc-500">TRACK PROGRESS</div>
+              <div className="font-mono text-sm font-bold text-zinc-200">{progressPercent}% COMPLETED</div>
             </div>
-            <div className="w-24 bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+            <div className="w-24 bg-zinc-950 rounded-full h-2 overflow-hidden border border-zinc-800">
               <div 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full transition-all duration-500 rounded-full"
+                className="bg-emerald-400 h-full transition-all duration-500 rounded-full"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
             {(courseCompleted || progressPercent === 100) && (
               <Button 
                 onClick={() => setShowCertificate(true)}
-                className="bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-xs"
+                size="sm"
+                className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs"
               >
-                <Award className="w-4 h-4 mr-1.5" />
-                View Certificate
+                <Award className="w-3.5 h-3.5 mr-1.5" />
+                Certificate
               </Button>
             )}
           </div>
@@ -248,8 +231,8 @@ export default function CourseClassroom({
         {/* Left 2 Columns: Video Player & Tabs */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* VIDEO PLAYER CONTAINER */}
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-xl">
+          {/* CINEMATIC VIDEO CONTAINER */}
+          <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-zinc-800 shadow-2xl">
             {isLessonAccessible ? (
               <iframe
                 src={`${getEmbedUrl(activeLesson.videoUrl)}?autoplay=0&rel=0&modestbranding=1`}
@@ -259,14 +242,14 @@ export default function CourseClassroom({
                 className="w-full h-full border-0"
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-white bg-slate-900/95 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
-                  <Lock className="w-8 h-8 text-amber-400" />
+              <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-white bg-zinc-950 space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                  <Lock className="w-6 h-6 text-zinc-300" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">This Lesson is Locked</h3>
-                  <p className="text-sm text-slate-400 mt-1 max-w-md">
-                    Enroll in this course to get full access to all lectures, project repositories, and certificate.
+                  <h3 className="text-base font-bold text-white">Lesson Locked</h3>
+                  <p className="text-xs text-zinc-400 mt-1 max-w-sm">
+                    Enroll in this track to access full lectures, solution repositories, and certification.
                   </p>
                 </div>
                 <div className="w-full max-w-xs">
@@ -277,18 +260,18 @@ export default function CourseClassroom({
           </div>
 
           {/* Active Lesson Controls & Info */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+          <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-                  Currently Playing
+                <span className="mono-tag text-zinc-500">
+                  ACTIVE LECTURE
                 </span>
-                <h2 className="text-xl font-bold text-slate-900 mt-0.5">{activeLesson.title}</h2>
-                <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
-                  <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {activeLesson.duration}</span>
+                <h2 className="text-lg font-bold text-white mt-0.5">{activeLesson.title}</h2>
+                <div className="flex items-center gap-3 mono-tag text-zinc-400 mt-1">
+                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {activeLesson.duration}</span>
                   {activeLesson.isFreePreview && (
-                    <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
-                      Free Preview
+                    <span className="px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                      FREE PREVIEW
                     </span>
                   )}
                 </div>
@@ -297,87 +280,87 @@ export default function CourseClassroom({
               {isEnrolled && (
                 <Button
                   onClick={handleToggleLessonComplete}
-                  className={`transition-all font-semibold ${
+                  size="sm"
+                  className={`text-xs font-semibold rounded-lg transition-all ${
                     isCurrentLessonCompleted 
-                      ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
-                      : "bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800 hover:bg-emerald-900/60" 
+                      : "bg-zinc-100 text-zinc-950 hover:bg-zinc-200"
                   }`}
                 >
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  {isCurrentLessonCompleted ? "Lesson Completed" : "Mark as Completed"}
+                  <Check className="w-3.5 h-3.5 mr-1.5" />
+                  {isCurrentLessonCompleted ? "Completed" : "Mark as Completed"}
                 </Button>
               )}
             </div>
 
             {activeLesson.summary && (
-              <p className="text-sm text-slate-600 pt-2 border-t border-slate-100 leading-relaxed">
+              <p className="text-xs text-zinc-400 pt-2 border-t border-zinc-850 leading-relaxed">
                 {activeLesson.summary}
               </p>
             )}
           </div>
 
           {/* Classroom Tabs Navigation */}
-          <div className="border-b border-slate-200 flex gap-6 text-sm font-semibold">
+          <div className="border-b border-zinc-850 flex gap-6 text-xs font-mono">
             <button
               onClick={() => setActiveTab("overview")}
-              className={`pb-3 transition-colors border-b-2 ${
+              className={`pb-2.5 transition-colors border-b-2 ${
                 activeTab === "overview" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-slate-500 hover:text-slate-800"
+                  ? "border-zinc-100 text-white font-bold" 
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              Overview & Objectives
+              OVERVIEW
             </button>
             <button
               onClick={() => setActiveTab("curriculum")}
-              className={`pb-3 transition-colors border-b-2 ${
+              className={`pb-2.5 transition-colors border-b-2 ${
                 activeTab === "curriculum" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-slate-500 hover:text-slate-800"
+                  ? "border-zinc-100 text-white font-bold" 
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              Full Syllabus
+              SYLLABUS
             </button>
             <button
               onClick={() => setActiveTab("discussions")}
-              className={`pb-3 transition-colors border-b-2 flex items-center gap-1.5 ${
+              className={`pb-2.5 transition-colors border-b-2 flex items-center gap-1.5 ${
                 activeTab === "discussions" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-slate-500 hover:text-slate-800"
+                  ? "border-zinc-100 text-white font-bold" 
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              Community Q&A
-              <span className="text-xs px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600">
+              DISCUSSIONS
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400">
                 {discussions.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab("resources")}
-              className={`pb-3 transition-colors border-b-2 ${
+              className={`pb-2.5 transition-colors border-b-2 ${
                 activeTab === "resources" 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-slate-500 hover:text-slate-800"
+                  ? "border-zinc-100 text-white font-bold" 
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              Resources & Downloads
+              ASSETS & REPOS
             </button>
           </div>
 
           {/* TAB 1: OVERVIEW */}
           {activeTab === "overview" && (
-            <div className="space-y-6">
-              {/* Description */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200/80 space-y-4">
-                <h3 className="text-lg font-bold text-slate-900">About this Course</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{course.description}</p>
+            <div className="space-y-4">
+              <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-4">
+                <span className="mono-tag text-zinc-500">SPECIFICATION</span>
+                <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed">{course.description}</p>
                 
                 {course.learningOutcomes && course.learningOutcomes.length > 0 && (
-                  <div className="pt-4 border-t border-slate-100 space-y-3">
-                    <h4 className="text-sm font-bold text-slate-900">What You Will Master</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="pt-4 border-t border-zinc-850 space-y-3">
+                    <span className="mono-tag text-zinc-500">LEARNING OBJECTIVES</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {course.learningOutcomes.map((outcome, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-xs text-slate-700">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
+                          <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                           <span>{outcome}</span>
                         </div>
                       ))}
@@ -386,19 +369,18 @@ export default function CourseClassroom({
                 )}
               </div>
 
-              {/* Instructor Card */}
               {course.instructor && (
-                <div className="p-6 rounded-2xl bg-white border border-slate-200/80 flex items-start gap-4">
+                <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 flex items-start gap-4">
                   <img
                     src={course.instructor.avatar}
                     alt={course.instructor.name}
-                    className="w-14 h-14 rounded-full object-cover shadow-sm"
+                    className="w-12 h-12 rounded-lg object-cover grayscale border border-zinc-800"
                   />
                   <div>
-                    <span className="text-xs font-semibold text-blue-600 uppercase">Instructor</span>
-                    <h4 className="text-base font-bold text-slate-900">{course.instructor.name}</h4>
-                    <p className="text-xs text-slate-500 mb-2">{course.instructor.role}</p>
-                    <p className="text-xs text-slate-600 leading-relaxed">{course.instructor.bio}</p>
+                    <span className="mono-tag text-zinc-500">INSTRUCTOR</span>
+                    <h4 className="text-sm font-bold text-white">{course.instructor.name}</h4>
+                    <p className="mono-tag text-zinc-400 mb-1">{course.instructor.role}</p>
+                    <p className="text-xs text-zinc-400 leading-relaxed">{course.instructor.bio}</p>
                   </div>
                 </div>
               )}
@@ -407,35 +389,35 @@ export default function CourseClassroom({
 
           {/* TAB 2: CURRICULUM */}
           {activeTab === "curriculum" && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {course.modules?.map((m, mIdx) => (
-                <div key={mIdx} className="p-6 rounded-2xl bg-white border border-slate-200/80 space-y-3">
-                  <h4 className="text-base font-bold text-slate-900 flex items-center justify-between">
-                    <span>{m.title}</span>
-                    <span className="text-xs font-normal text-slate-500">{m.lessons.length} Lectures</span>
-                  </h4>
-                  <div className="space-y-2 pt-2">
+                <div key={mIdx} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-bold text-white">{m.title}</h4>
+                    <span className="mono-tag text-zinc-500">{m.lessons.length} LECTURES</span>
+                  </div>
+                  <div className="space-y-1 pt-1">
                     {m.lessons.map((lesson) => {
                       const isDone = completedLessonIds.includes(lesson.id);
                       return (
                         <div 
                           key={lesson.id} 
                           onClick={() => (isEnrolled || lesson.isFreePreview) && setActiveLessonId(lesson.id)}
-                          className={`p-3 rounded-xl flex items-center justify-between transition-colors ${
+                          className={`p-2.5 rounded-lg flex items-center justify-between transition-colors ${
                             activeLessonId === lesson.id 
-                              ? "bg-blue-50 border border-blue-200" 
-                              : "hover:bg-slate-50 cursor-pointer border border-transparent"
+                              ? "bg-zinc-800 text-white" 
+                              : "hover:bg-zinc-850 cursor-pointer text-zinc-300"
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2.5">
                             {isDone ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
                             ) : (
-                              <PlayCircle className={`w-4 h-4 ${activeLessonId === lesson.id ? "text-blue-600" : "text-slate-400"}`} />
+                              <Play className={`w-3.5 h-3.5 ${activeLessonId === lesson.id ? "text-white" : "text-zinc-500"}`} />
                             )}
-                            <span className="text-sm font-medium text-slate-800">{lesson.title}</span>
+                            <span className="text-xs">{lesson.title}</span>
                           </div>
-                          <span className="text-xs text-slate-500">{lesson.duration}</span>
+                          <span className="mono-tag text-zinc-500">{lesson.duration}</span>
                         </div>
                       );
                     })}
@@ -447,89 +429,73 @@ export default function CourseClassroom({
 
           {/* TAB 3: DISCUSSIONS */}
           {activeTab === "discussions" && (
-            <div className="space-y-6">
-              {/* Ask Question Form */}
+            <div className="space-y-4">
               {currentUser ? (
-                <form onSubmit={handlePostQuestion} className="p-6 rounded-2xl bg-white border border-slate-200/80 space-y-4 shadow-xs">
-                  <h4 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-blue-600" />
-                    Ask a Question about this Lesson
-                  </h4>
+                <form onSubmit={handlePostQuestion} className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+                  <span className="mono-tag text-zinc-500 flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+                    NEW DISCUSSION THREAD
+                  </span>
                   <Input
-                    placeholder="Brief question summary..."
+                    placeholder="Subject line..."
                     value={newQuestionTitle}
                     onChange={(e) => setNewQuestionTitle(e.target.value)}
                     required
-                    className="bg-slate-50 border-slate-200 text-sm"
+                    className="bg-zinc-950 border-zinc-800 text-xs text-zinc-200"
                   />
                   <textarea
-                    placeholder="Provide details or paste any code snippets you're having trouble with..."
+                    placeholder="Provide technical context, reproduction steps, or code..."
                     value={newQuestionContent}
                     onChange={(e) => setNewQuestionContent(e.target.value)}
                     required
                     rows={3}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700"
                   />
                   <div className="flex justify-end">
                     <Button 
                       type="submit" 
                       disabled={submittingQuestion} 
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs"
+                      size="sm"
+                      className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs"
                     >
-                      <Send className="w-3.5 h-3.5 mr-1.5" />
-                      {submittingQuestion ? "Posting..." : "Post Question"}
+                      <Send className="w-3 h-3 mr-1.5" />
+                      {submittingQuestion ? "Posting..." : "Submit Dispatch"}
                     </Button>
                   </div>
                 </form>
               ) : (
-                <div className="p-4 rounded-xl bg-slate-100 text-center text-xs text-slate-600">
-                  <Link href="/login" className="text-blue-600 font-semibold underline">Sign in</Link> to participate in the classroom discussion.
+                <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800 text-center mono-tag text-zinc-400">
+                  <Link href="/login" className="text-white underline">Sign in</Link> to post in classroom discussions.
                 </div>
               )}
 
-              {/* Discussions List */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {discussions.length === 0 ? (
-                  <p className="text-center py-8 text-sm text-slate-500">No discussions posted yet. Be the first to start a conversation!</p>
+                  <p className="text-center py-8 mono-tag text-zinc-500">NO DISPATCHES RECORDED YET</p>
                 ) : (
                   discussions.map((d: any, idx: number) => (
-                    <div key={idx} className="p-6 rounded-2xl bg-white border border-slate-200/80 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={d.userAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"}
-                            alt={d.userName}
-                            className="w-7 h-7 rounded-full object-cover"
-                          />
-                          <div>
-                            <span className="text-xs font-bold text-slate-800">{d.userName}</span>
-                            <span className="text-[10px] ml-2 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold">
-                              {d.userRole || "Student"}
-                            </span>
-                          </div>
+                    <div key={idx} className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-white text-xs">{d.userName}</span>
+                          <span className="mono-tag text-zinc-400 bg-zinc-800 px-1.5 py-0.2 rounded">
+                            {d.userRole || "Student"}
+                          </span>
                         </div>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="mono-tag text-zinc-500">
                           {new Date(d.createdAt).toLocaleDateString()}
                         </span>
                       </div>
 
-                      <h4 className="text-sm font-bold text-slate-900">{d.title}</h4>
-                      <p className="text-xs text-slate-600 leading-relaxed">{d.content}</p>
+                      <h4 className="text-xs font-bold text-zinc-200">{d.title}</h4>
+                      <p className="text-xs text-zinc-400 leading-relaxed">{d.content}</p>
 
-                      {/* Replies */}
                       {d.replies && d.replies.length > 0 && (
-                        <div className="mt-3 pl-4 border-l-2 border-blue-500 space-y-3 pt-2">
+                        <div className="mt-3 pl-3 border-l border-zinc-700 space-y-2 pt-1">
                           {d.replies.map((r: any, rIdx: number) => (
-                            <div key={rIdx} className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-blue-900">{r.userName}</span>
-                                {r.userRole === "Instructor" && (
-                                  <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">
-                                    Instructor
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-xs text-slate-700">{r.content}</p>
+                            <div key={rIdx} className="space-y-0.5">
+                              <span className="mono-tag text-zinc-300 font-bold">{r.userName} (Instructor)</span>
+                              <p className="text-xs text-zinc-400">{r.content}</p>
                             </div>
                           ))}
                         </div>
@@ -543,31 +509,31 @@ export default function CourseClassroom({
 
           {/* TAB 4: RESOURCES */}
           {activeTab === "resources" && (
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/80 space-y-4">
-              <h3 className="text-lg font-bold text-slate-900">Course Materials & Downloads</h3>
-              <div className="space-y-3">
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-blue-600" />
+            <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-3">
+              <span className="mono-tag text-zinc-500">REPOSITORIES & ARTIFACTS</span>
+              <div className="space-y-2">
+                <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <FileText className="w-4 h-4 text-zinc-400" />
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800">Complete Course Notes & Cheat Sheet (.PDF)</h4>
-                      <p className="text-xs text-slate-500">Summary formulas, key shortcuts, and architectural diagrams</p>
+                      <h4 className="text-xs font-semibold text-zinc-200">System Architecture Spec & Cheat Sheet</h4>
+                      <p className="mono-tag text-zinc-500">Reference manual (.pdf)</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" className="text-xs">
-                    <Download className="w-3.5 h-3.5 mr-1" /> Download
+                  <Button variant="outline" size="sm" className="text-[11px] h-7 border-zinc-800 text-zinc-300">
+                    <Download className="w-3 h-3 mr-1" /> Export
                   </Button>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <ExternalLink className="w-5 h-5 text-indigo-600" />
+                <div className="p-3 rounded-lg bg-zinc-950 border border-zinc-850 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <ExternalLink className="w-4 h-4 text-zinc-400" />
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-800">Official GitHub Starter & Solution Repository</h4>
-                      <p className="text-xs text-slate-500">Fully configured branches for every module and checkpoint</p>
+                      <h4 className="text-xs font-semibold text-zinc-200">GitHub Verified Source Repository</h4>
+                      <p className="mono-tag text-zinc-500">Dockerfiles, unit tests, and CI workflows</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" asChild className="text-xs">
+                  <Button variant="outline" size="sm" asChild className="text-[11px] h-7 border-zinc-800 text-zinc-300">
                     <a href="https://github.com/islamrakibul9274/edu-platform" target="_blank" rel="noopener noreferrer">
                       View Code
                     </a>
@@ -580,27 +546,27 @@ export default function CourseClassroom({
         </div>
 
         {/* Right 1 Column: Course Curriculum Playlist */}
-        <div className="space-y-6">
-          <Card className="rounded-2xl border-slate-200/80 shadow-xs overflow-hidden sticky top-20">
-            <div className="p-5 bg-slate-900 text-white flex items-center justify-between">
+        <div className="space-y-4">
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 overflow-hidden sticky top-20">
+            <div className="p-4 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold">Course Curriculum</h3>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  {completedLessonIds.length} of {allLessons.length} lessons completed
+                <h3 className="text-xs font-bold mono-tag text-zinc-300">CURRICULUM TREE</h3>
+                <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+                  {completedLessonIds.length} / {allLessons.length} LECTURES
                 </p>
               </div>
-              <span className="text-xs font-bold text-blue-400 bg-blue-950 px-2.5 py-1 rounded-md border border-blue-800">
+              <span className="mono-tag px-2 py-0.5 rounded bg-zinc-800 text-zinc-200 border border-zinc-700">
                 {progressPercent}%
               </span>
             </div>
 
-            <CardContent className="p-0 divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+            <div className="p-2 space-y-4 max-h-[580px] overflow-y-auto">
               {course.modules?.map((module, mIdx) => (
-                <div key={mIdx} className="p-4 space-y-2">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div key={mIdx} className="space-y-1">
+                  <div className="mono-tag text-zinc-500 px-2 py-1">
                     {module.title}
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {module.lessons.map((lesson) => {
                       const isActive = activeLessonId === lesson.id;
                       const isCompleted = completedLessonIds.includes(lesson.id);
@@ -610,131 +576,126 @@ export default function CourseClassroom({
                         <div
                           key={lesson.id}
                           onClick={() => isUnlocked && setActiveLessonId(lesson.id)}
-                          className={`p-3 rounded-xl flex items-center justify-between text-xs transition-all ${
+                          className={`p-2 rounded-lg flex items-center justify-between text-xs transition-all ${
                             isActive
-                              ? "bg-blue-600 text-white font-semibold shadow-xs"
+                              ? "bg-zinc-800 text-white font-semibold"
                               : isUnlocked
-                              ? "hover:bg-slate-100 cursor-pointer text-slate-700"
-                              : "opacity-60 cursor-not-allowed text-slate-400"
+                              ? "hover:bg-zinc-850 cursor-pointer text-zinc-300"
+                              : "opacity-40 cursor-not-allowed text-zinc-500"
                           }`}
                         >
-                          <div className="flex items-center gap-2.5 truncate pr-2">
+                          <div className="flex items-center gap-2 truncate pr-2">
                             {isCompleted ? (
-                              <CheckCircle2 className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-emerald-600"}`} />
+                              <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                             ) : isUnlocked ? (
-                              <PlayCircle className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-blue-600"}`} />
+                              <Play className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-zinc-500"}`} />
                             ) : (
-                              <Lock className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                              <Lock className="w-3.5 h-3.5 shrink-0 text-zinc-500" />
                             )}
-                            <span className="truncate">{lesson.title}</span>
+                            <span className="truncate text-xs">{lesson.title}</span>
                           </div>
 
-                          <div className="flex items-center gap-2 shrink-0">
-                            {lesson.isFreePreview && !isEnrolled && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
-                                Free
-                              </span>
-                            )}
-                            <span className={isActive ? "text-blue-100" : "text-slate-400"}>{lesson.duration}</span>
-                          </div>
+                          <span className="mono-tag text-zinc-500 shrink-0">{lesson.duration}</span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
               ))}
-            </CardContent>
+            </div>
 
             {!isEnrolled && (
-              <div className="p-4 bg-slate-50 border-t border-slate-100">
+              <div className="p-3 bg-zinc-950 border-t border-zinc-800">
                 <EnrollButton courseId={course._id} />
               </div>
             )}
-          </Card>
+          </div>
         </div>
 
       </div>
 
-      {/* VERIFIABLE DIGITAL CERTIFICATE MODAL */}
+      {/* MINIMALIST VERIFIABLE SWISS CERTIFICATE */}
       {showCertificate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in">
+          <div className="relative w-full max-w-2xl bg-white text-zinc-950 rounded-2xl shadow-2xl overflow-hidden border border-zinc-300">
             
-            {/* Close button */}
             <button
               onClick={() => setShowCertificate(false)}
-              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+              className="absolute top-4 right-4 z-20 p-1.5 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            {/* Printable Certificate Content */}
-            <div id="certificate-print-area" className="p-8 sm:p-12 text-center bg-radial from-amber-50/50 via-white to-slate-50 border-8 border-double border-amber-600/30 m-4 rounded-2xl relative">
+            {/* Swiss Precision Credential Document */}
+            <div id="certificate-print-area" className="p-8 sm:p-12 text-left bg-white border border-zinc-200 m-4 rounded-xl relative space-y-6">
               
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 mb-4">
-                <Award className="w-10 h-10" />
-              </div>
-
-              <span className="text-xs font-extrabold tracking-widest text-amber-700 uppercase block mb-1">
-                EduPlatform Verified Credential
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-serif">
-                Certificate of Completion
-              </h2>
-
-              <p className="text-xs text-slate-500 mt-4 uppercase tracking-wider">
-                This is proudly presented to
-              </p>
-              
-              <div className="text-2xl sm:text-3xl font-extrabold text-blue-700 underline decoration-amber-500 underline-offset-8 my-3">
-                {currentUser?.name || "Distinguished Student"}
-              </div>
-
-              <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed mt-4">
-                For successfully fulfilling all lectures, practical assignments, and hands-on milestones in
-              </p>
-
-              <div className="text-xl font-bold text-slate-900 mt-1 mb-6">
-                {course.title}
-              </div>
-
-              <div className="grid grid-cols-2 gap-8 max-w-md mx-auto pt-6 border-t border-slate-200 text-xs">
-                <div>
-                  <div className="font-serif italic text-base text-slate-800">
-                    {course.instructor?.name || "Sarah Chen"}
+              <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-zinc-950 text-white font-mono flex items-center justify-center text-xs font-bold">
+                    ED
                   </div>
-                  <div className="text-slate-400 mt-0.5">Instructor & Verified Reviewer</div>
+                  <span className="font-bold tracking-tight text-sm uppercase">EDUPLATFORM ACADEMIC COUNCIL</span>
                 </div>
-                <div>
-                  <div className="font-mono font-semibold text-slate-700">
-                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </div>
-                  <div className="text-slate-400 mt-0.5">Issue Date</div>
+                <span className="font-mono text-xs text-zinc-600">SERIAL // {certificateId || "CERT-VERIFIED-2026"}</span>
+              </div>
+
+              <div className="space-y-1">
+                <span className="font-mono text-xs text-zinc-500 uppercase tracking-widest block">CREDENTIAL OF EXCELLENCE</span>
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900">
+                  Certificate of Engineering Completion
+                </h2>
+              </div>
+
+              <div className="py-2 border-y border-zinc-100 space-y-1">
+                <span className="font-mono text-[11px] text-zinc-500 uppercase">AWARDED TO</span>
+                <div className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900">
+                  {currentUser?.name || "Distinguished Student"}
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span>Certificate ID: <strong className="font-mono text-slate-700">{certificateId || "CERT-VERIFIED-2026"}</strong></span>
-                <span className="text-emerald-600 font-semibold flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Authenticity Verified
+              <div className="space-y-1">
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  Has fulfilled all architectural milestones, code assignments, and end-to-end practical verifications for
+                </p>
+                <div className="text-base font-bold text-zinc-900">
+                  {course.title}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 pt-4 border-t border-zinc-200 text-xs font-mono">
+                <div>
+                  <span className="text-zinc-500 block text-[10px]">REVIEWER</span>
+                  <span className="font-semibold text-zinc-900">{course.instructor?.name || "Staff Architect"}</span>
+                </div>
+                <div>
+                  <span className="text-zinc-500 block text-[10px]">VERIFIED TIMESTAMP</span>
+                  <span className="font-semibold text-zinc-900">{new Date().toISOString().split('T')[0]}</span>
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-zinc-500 border-t border-zinc-100">
+                <span className="flex items-center gap-1.5 text-emerald-700 font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5" /> SHA-256 CRYPTOGRAPHICALLY VERIFIED
                 </span>
+                <span>STATUS: ISSUED</span>
               </div>
 
             </div>
 
-            {/* Modal Actions */}
-            <div className="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-end gap-3">
+            <div className="p-3 bg-zinc-50 border-t border-zinc-200 flex items-center justify-end gap-2">
               <Button 
                 variant="outline" 
+                size="sm"
                 onClick={() => window.print()}
-                className="text-xs font-semibold"
+                className="text-xs text-zinc-800"
               >
-                <Printer className="w-3.5 h-3.5 mr-1.5" />
-                Print / Save PDF
+                <Printer className="w-3.5 h-3.5 mr-1" />
+                Print PDF
               </Button>
               <Button 
+                size="sm"
                 onClick={() => setShowCertificate(false)}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold"
+                className="bg-zinc-950 text-white hover:bg-zinc-800 text-xs"
               >
                 Close
               </Button>

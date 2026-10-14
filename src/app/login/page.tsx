@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { GraduationCap, Eye, EyeOff, Sparkles, CheckCircle2, Lock, ArrowRight, ShieldCheck } from "lucide-react";
+import { Terminal, Eye, EyeOff, ShieldCheck, ArrowRight, Zap, Check } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +30,7 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setError("Invalid email or password. Please check your credentials.");
+        setError("Invalid email or password. Please verify credentials.");
       } else {
         router.push("/dashboard");
         router.refresh();
@@ -50,104 +49,98 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-[85vh] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-5xl rounded-3xl bg-white border border-slate-200/80 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+    <main className="min-h-[85vh] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#09090b]">
+      <div className="w-full max-w-4xl rounded-2xl bg-[#111114] border border-zinc-800 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         
-        {/* Left Column: Visual Showcase */}
-        <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-950 text-white relative overflow-hidden">
-          <div className="relative z-10 space-y-6">
+        {/* Left Column: Technical Terminal Spec */}
+        <div className="hidden lg:flex flex-col justify-between p-10 bg-zinc-950 border-r border-zinc-850 text-zinc-100 relative">
+          <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <GraduationCap className="w-6 h-6" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-mono font-bold text-xs">
+                <Terminal className="w-4 h-4 text-zinc-950" />
               </div>
-              <span className="font-black text-2xl tracking-tight">EduPlatform.</span>
+              <span className="font-bold text-base tracking-tight">EduPlatform</span>
             </Link>
 
-            <div className="pt-8 space-y-3">
-              <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">
-                Student Learning Center
+            <div className="pt-6 space-y-2">
+              <span className="mono-tag text-zinc-500">
+                STUDENT TERMINAL
               </span>
-              <h2 className="text-3xl font-black leading-tight tracking-tight">
-                Accelerate your software engineering journey.
+              <h2 className="text-xl font-bold tracking-tight text-white">
+                Access your engineering studio.
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Log back in to resume your active modules, submit questions to instructors, and review your verified credentials.
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Resume active modules, track completion telemetry, inspect course materials, and access your verified credentials.
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 text-xs text-slate-300">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Next.js 16, Computer Vision & DevOps Tracks</span>
+            <div className="space-y-2.5 pt-2 text-xs font-mono text-zinc-400">
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Next.js 16, YOLOv8 Vision & DevOps Tracks</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Instant resume on your active lesson</span>
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Instant restore on active lecture position</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Printable industry certificate verification</span>
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Verifiable cryptographic certificate signing</span>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 pt-8 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
-            <span>© {new Date().getFullYear()} EduPlatform LMS</span>
-            <span className="flex items-center gap-1 text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-blue-400" /> Secure Sessions
+          <div className="pt-6 border-t border-zinc-900 text-[11px] font-mono text-zinc-600 flex items-center justify-between">
+            <span>© {new Date().getFullYear()} EDUPLATFORM</span>
+            <span className="flex items-center gap-1 text-zinc-500">
+              <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" /> SECURE_AUTH
             </span>
           </div>
-
-          {/* Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
         </div>
 
         {/* Right Column: Form */}
-        <div className="p-8 sm:p-12 flex flex-col justify-center">
+        <div className="p-8 sm:p-10 flex flex-col justify-center bg-[#111114]">
           
-          <div className="mb-6 space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Welcome back</h1>
-            <p className="text-sm text-slate-500">
-              Enter your credentials to access your courses and dashboard.
+          <div className="mb-6 space-y-1">
+            <h1 className="text-xl font-bold text-white tracking-tight">Sign in to console</h1>
+            <p className="text-xs text-zinc-400">
+              Enter your student credentials to proceed.
             </p>
           </div>
 
           {/* Quick Demo Fill Button */}
-          <div className="mb-6 p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs text-blue-900 font-medium">
-              <Sparkles className="w-4 h-4 text-blue-600" />
-              <span>Testing out the platform?</span>
+          <div className="mb-6 p-3 rounded-xl bg-zinc-900/60 border border-zinc-800 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+              <Zap className="w-3.5 h-3.5 text-zinc-300" />
+              <span>TEST CREDENTIALS</span>
             </div>
             <button
               type="button"
               onClick={handleFillDemo}
-              className="text-xs font-bold text-blue-600 hover:text-blue-800 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs hover:bg-blue-50 transition-colors"
+              className="text-[11px] font-mono text-zinc-200 hover:text-white bg-zinc-800 hover:bg-zinc-750 px-2.5 py-1 rounded border border-zinc-700 transition-colors"
             >
-              ⚡ Fill Demo Account
+              FILL DEMO ACCOUNT
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-xs font-bold text-slate-700">Email Address</Label>
+              <Label htmlFor="email" className="mono-tag text-zinc-400">EMAIL</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder="developer@example.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 rounded-xl bg-slate-50 border-slate-200 focus:bg-white text-sm"
+                className="h-10 rounded-lg bg-zinc-950 border-zinc-800 focus:border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-600"
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-xs font-bold text-slate-700">Password</Label>
-                <Link href="#" className="text-xs text-blue-600 hover:underline">
-                  Forgot password?
-                </Link>
+                <Label htmlFor="password" className="mono-tag text-zinc-400">PASSWORD</Label>
               </div>
               <div className="relative">
                 <Input
@@ -157,20 +150,20 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-11 rounded-xl bg-slate-50 border-slate-200 focus:bg-white text-sm pr-10"
+                  className="h-10 rounded-lg bg-zinc-950 border-zinc-800 focus:border-zinc-700 text-xs text-zinc-200 pr-9"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-medium text-red-600">
+              <div className="p-2.5 rounded-lg bg-red-950/40 border border-red-900/60 text-xs font-mono text-red-400">
                 {error}
               </div>
             )}
@@ -178,17 +171,17 @@ export default function LoginPage() {
             <Button
               disabled={loading}
               type="submit"
-              className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all mt-2"
+              className="w-full h-10 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg transition-all mt-2"
             >
-              {loading ? "Signing in..." : "Sign In to EduPlatform"}
+              {loading ? "Authenticating..." : "Authorize Session"}
             </Button>
 
           </form>
 
-          <div className="mt-8 text-center text-xs text-slate-500 pt-6 border-t border-slate-100">
-            Don't have an account yet?{" "}
-            <Link href="/register" className="text-blue-600 font-bold hover:underline">
-              Create an account for free
+          <div className="mt-8 text-center text-xs text-zinc-500 pt-5 border-t border-zinc-850">
+            Need an account?{" "}
+            <Link href="/register" className="text-zinc-300 font-medium hover:underline">
+              Register free
             </Link>
           </div>
 

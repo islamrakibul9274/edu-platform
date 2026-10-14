@@ -6,35 +6,34 @@ import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 
 export default function EnrollButton({ courseId }: { courseId: string }) {
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-    const handleEnroll = async () => {
-        setLoading(true);
+  const handleEnroll = async () => {
+    setLoading(true);
 
-        const res = await fetch("/api/enroll", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ courseId }),
-        });
+    const res = await fetch("/api/enroll", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ courseId }),
+    });
 
-        if (res.ok) {
-            router.refresh();
-            // Add this line so the button resets after the background refresh finishes!
-            setLoading(false);
-        } else {
-            setLoading(false);
-        }
-    };
+    if (res.ok) {
+      router.refresh();
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <Button
-            onClick={handleEnroll}
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6 mt-4 shadow-md"
-        >
-            <Lock className="w-5 h-5 mr-2" />
-            {loading ? "Enrolling..." : "Enroll to Unlock Course"}
-        </Button>
-    );
+  return (
+    <Button
+      onClick={handleEnroll}
+      disabled={loading}
+      className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-xs h-10 rounded-lg shadow-sm"
+    >
+      <Lock className="w-3.5 h-3.5 mr-1.5" />
+      {loading ? "Authorizing Enrollment..." : "Enroll to Unlock Track"}
+    </Button>
+  );
 }

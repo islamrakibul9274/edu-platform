@@ -4,19 +4,17 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { 
   Search, 
-  Filter, 
   Star, 
   Clock, 
   BookOpen, 
   ArrowRight, 
-  CheckCircle2, 
-  Sparkles,
-  Layers,
-  GraduationCap
+  Check, 
+  Layers, 
+  Command, 
+  SlidersHorizontal 
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface CourseItem {
   _id: string;
@@ -91,106 +89,109 @@ export default function CourseCatalog({ initialCourses, userEnrolledIds, userCom
   return (
     <div className="space-y-8">
       
-      {/* Search and Filters Bar */}
-      <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-5">
+      {/* 2026 Technical Filter Command Console */}
+      <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 space-y-4">
         
-        {/* Top search & sorting row */}
-        <div className="flex flex-col md:flex-row items-center gap-4">
+        {/* Search & Sort row */}
+        <div className="flex flex-col md:flex-row items-center gap-3">
           <div className="relative w-full md:flex-1">
-            <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <Input
               type="text"
-              placeholder="Search courses by title, topic, or instructor name..."
+              placeholder="Search by track name, technology, or instructor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-11 h-12 bg-slate-50 border-slate-200 focus:bg-white text-base rounded-xl"
+              className="pl-10 h-10 bg-zinc-950/80 border-zinc-800 focus:border-zinc-700 text-xs rounded-lg text-zinc-200 placeholder:text-zinc-500"
             />
-            {searchTerm && (
+            {searchTerm ? (
               <button 
                 onClick={() => setSearchTerm("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-slate-600 bg-slate-200 px-1.5 py-0.5 rounded"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-400 hover:text-zinc-200 bg-zinc-800 px-1.5 py-0.5 rounded"
               >
-                Clear
+                ESC
               </button>
+            ) : (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-500 border border-zinc-800 px-1.5 py-0.5 rounded pointer-events-none">
+                ⌘K
+              </span>
             )}
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto self-start md:self-auto">
-            <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">Sort by:</span>
+          <div className="flex items-center gap-2 w-full md:w-auto self-start md:self-auto">
+            <span className="mono-tag text-zinc-500 whitespace-nowrap">SORT</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="h-12 px-4 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="h-10 px-3 rounded-lg bg-zinc-950/80 border border-zinc-800 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700"
             >
               <option value="popular">Most Popular</option>
               <option value="rating">Highest Rated</option>
-              <option value="lessons">Most Lessons</option>
+              <option value="lessons">Lesson Density</option>
             </select>
           </div>
         </div>
 
-        {/* Category Pills Row */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs font-medium text-slate-500">
-            <span>Filter by Category:</span>
-            <span className="text-blue-600 font-semibold">{filteredCourses.length} courses found</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  selectedCategory === cat
-                    ? "bg-blue-600 text-white shadow-xs"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Level Filters */}
-        <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-          <span className="text-xs font-medium text-slate-500 mr-2">Level:</span>
-          {levels.map((lvl) => (
+        {/* Category Pills */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+          {categories.map((cat) => (
             <button
-              key={lvl}
-              onClick={() => setSelectedLevel(lvl)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                selectedLevel === lvl
-                  ? "bg-slate-900 text-white font-semibold"
-                  : "bg-transparent text-slate-600 hover:bg-slate-100"
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1 rounded-md text-xs transition-all ${
+                selectedCategory === cat
+                  ? "bg-zinc-100 text-zinc-950 font-semibold"
+                  : "bg-zinc-950/60 text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:bg-zinc-800/50"
               }`}
             >
-              {lvl}
+              {cat}
             </button>
           ))}
         </div>
 
+        {/* Level Filters */}
+        <div className="flex items-center justify-between pt-3 border-t border-zinc-850/80 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="mono-tag text-zinc-500 mr-1.5">DIFFICULTY</span>
+            {levels.map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setSelectedLevel(lvl)}
+                className={`px-2.5 py-0.5 rounded text-[11px] font-mono transition-colors ${
+                  selectedLevel === lvl
+                    ? "bg-zinc-800 text-zinc-100 border border-zinc-700"
+                    : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
+
+          <span className="mono-tag text-zinc-500">
+            {filteredCourses.length} {filteredCourses.length === 1 ? "RESULT" : "RESULTS"}
+          </span>
+        </div>
+
       </div>
 
-      {/* Courses Grid */}
+      {/* Grid */}
       {filteredCourses.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300 p-8 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-            <Search className="w-8 h-8" />
-          </div>
-          <h3 className="text-xl font-bold text-slate-800">No courses match your criteria</h3>
-          <p className="text-sm text-slate-500 max-w-md mx-auto">
-            Try adjusting your search terms, changing the category filter, or clearing the filters to view all courses.
+        <div className="text-center py-20 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 p-8 space-y-4">
+          <SlidersHorizontal className="w-8 h-8 text-zinc-600 mx-auto" />
+          <h3 className="text-base font-bold text-zinc-200">No matching curricula found</h3>
+          <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+            Try adjusting your search query or reset the filter settings.
           </p>
           <Button 
             onClick={() => { setSearchTerm(""); setSelectedCategory("All"); setSelectedLevel("All"); }}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            size="sm"
+            className="bg-zinc-100 text-zinc-950 hover:bg-zinc-200 text-xs"
           >
             Reset Filters
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCourses.map((course) => {
             const isEnrolled = userEnrolledIds.includes(course._id.toString());
             const isCompleted = userCompletedIds.includes(course._id.toString());
@@ -199,113 +200,110 @@ export default function CourseCatalog({ initialCourses, userEnrolledIds, userCom
               (acc, m) => acc + (m.lessons?.length || 0), 0
             ) || 0;
 
-            const levelBadge = 
-              course.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-              course.level === 'Intermediate' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-              'bg-purple-50 text-purple-700 border-purple-200';
+            const levelDot = 
+              course.level === 'Beginner' ? 'bg-emerald-400' :
+              course.level === 'Intermediate' ? 'bg-amber-400' : 'bg-sky-400';
 
             return (
-              <Card 
+              <div 
                 key={course._id.toString()}
-                className="group overflow-hidden rounded-2xl border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300 flex flex-col bg-white"
+                className="obsidian-card rounded-xl overflow-hidden flex flex-col justify-between group"
               >
                 {/* Thumbnail Image */}
-                <div className="relative aspect-video w-full overflow-hidden bg-slate-900">
-                  <img
-                    src={course.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"}
-                    alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                <div>
+                  <div className="relative aspect-video w-full overflow-hidden bg-zinc-900">
+                    <img
+                      src={course.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"}
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300 grayscale-20 contrast-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#111114] via-transparent to-transparent" />
 
-                  {/* Level Badge */}
-                  <span className={`absolute top-3 left-3 text-[11px] font-bold px-2.5 py-1 rounded-md border backdrop-blur-md shadow-xs ${levelBadge}`}>
-                    {course.level}
-                  </span>
+                    {/* Level Pill */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-950/80 border border-zinc-800 text-zinc-300 mono-tag">
+                      <span className={`w-1.5 h-1.5 rounded-full ${levelDot}`}></span>
+                      {course.level}
+                    </div>
 
-                  {/* Enrolled / Completed Pill */}
-                  {isCompleted ? (
-                    <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-600 text-white shadow-xs flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Completed
+                    {/* Status Pill */}
+                    {isCompleted ? (
+                      <span className="absolute top-3 right-3 text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/90 text-emerald-400 border border-emerald-800 flex items-center gap-1">
+                        <Check className="w-3 h-3" /> COMPLETED
+                      </span>
+                    ) : isEnrolled ? (
+                      <span className="absolute top-3 right-3 text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900/90 text-zinc-300 border border-zinc-700">
+                        ENROLLED
+                      </span>
+                    ) : null}
+
+                    {/* Category */}
+                    <span className="absolute bottom-3 left-3 text-zinc-300 mono-tag bg-zinc-950/80 px-2 py-0.5 rounded border border-zinc-850">
+                      {course.category}
                     </span>
-                  ) : isEnrolled ? (
-                    <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-md bg-blue-600 text-white shadow-xs flex items-center gap-1">
-                      <GraduationCap className="w-3.5 h-3.5" /> Enrolled
+
+                    {/* Rating */}
+                    <span className="absolute bottom-3 right-3 text-zinc-300 mono-tag flex items-center gap-1 bg-zinc-950/80 px-2 py-0.5 rounded border border-zinc-850">
+                      <Star className="w-3 h-3 text-zinc-300 fill-zinc-300" /> {course.rating || 4.8}
                     </span>
-                  ) : null}
+                  </div>
 
-                  {/* Category Pill */}
-                  <span className="absolute bottom-3 left-3 text-[11px] font-medium text-white/90 bg-slate-900/80 px-2 py-0.5 rounded">
-                    {course.category}
-                  </span>
-
-                  {/* Rating */}
-                  <span className="absolute bottom-3 right-3 text-[11px] font-semibold text-white/90 flex items-center gap-1 bg-slate-900/80 px-2 py-0.5 rounded">
-                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {course.rating || 4.8}
-                    <span className="text-white/60">({course.reviewCount || 100})</span>
-                  </span>
-                </div>
-
-                {/* Content */}
-                <CardContent className="p-6 flex flex-col flex-1 justify-between">
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                  {/* Body Content */}
+                  <div className="p-5 space-y-2">
+                    <h3 className="text-base font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
                       {course.title}
                     </h3>
-                    <p className="text-sm text-slate-600 mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                       {course.description}
                     </p>
                   </div>
+                </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-100 space-y-4">
-                    
-                    {/* Meta stats */}
-                    <div className="flex items-center justify-between text-xs text-slate-500">
-                      <div className="flex items-center gap-1.5">
-                        <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{totalLessons > 0 ? `${totalLessons} Lessons` : "Modular Track"}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{course.duration || "6h 30m"}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Layers className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{course.enrolledCount || 400}+ Students</span>
-                      </div>
-                    </div>
-
-                    {/* Instructor */}
-                    {course.instructor && (
-                      <div className="flex items-center gap-2 pt-1 text-xs">
-                        <img
-                          src={course.instructor.avatar}
-                          alt={course.instructor.name}
-                          className="w-6 h-6 rounded-full object-cover"
-                        />
-                        <span className="font-medium text-slate-700">{course.instructor.name}</span>
-                        <span className="text-slate-400 truncate text-[11px]">• {course.instructor.role}</span>
-                      </div>
-                    )}
-
-                    {/* CTA Button */}
-                    <Button 
-                      asChild 
-                      className={`w-full text-white font-medium transition-all ${
-                        isEnrolled 
-                          ? "bg-blue-600 hover:bg-blue-700 shadow-sm" 
-                          : "bg-slate-900 hover:bg-blue-600 shadow-sm"
-                      }`}
-                    >
-                      <Link href={`/courses/${course._id.toString()}`}>
-                        {isCompleted ? "Review Completed Course" : isEnrolled ? "Continue Learning" : "View Curriculum"}
-                        <ArrowRight className="w-4 h-4 ml-1.5" />
-                      </Link>
-                    </Button>
-
+                {/* Footer strip */}
+                <div className="p-5 pt-0 border-t border-zinc-850/80 mt-4 space-y-3">
+                  
+                  {/* Metadata */}
+                  <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-3">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="w-3.5 h-3.5 text-zinc-400" />
+                      {totalLessons > 0 ? `${totalLessons} Lessons` : "Core Modules"}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                      {course.duration}
+                    </span>
+                    <span>{course.enrolledCount || 400}+ enrolled</span>
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Instructor */}
+                  {course.instructor && (
+                    <div className="flex items-center gap-2 text-xs text-zinc-300">
+                      <img
+                        src={course.instructor.avatar}
+                        alt="Instructor"
+                        className="w-5 h-5 rounded-full object-cover"
+                      />
+                      <span className="text-xs text-zinc-300 font-medium">{course.instructor.name}</span>
+                    </div>
+                  )}
+
+                  {/* CTA */}
+                  <Button 
+                    asChild 
+                    size="sm"
+                    className={`w-full text-xs font-semibold rounded-lg transition-all ${
+                      isEnrolled 
+                        ? "bg-zinc-100 text-zinc-950 hover:bg-zinc-200" 
+                        : "bg-zinc-900 border border-zinc-800 text-zinc-200 hover:bg-zinc-800 hover:text-white"
+                    }`}
+                  >
+                    <Link href={`/courses/${course._id.toString()}`}>
+                      {isCompleted ? "Review Curriculum" : isEnrolled ? "Resume Track" : "Inspect Track"}
+                      <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                    </Link>
+                  </Button>
+
+                </div>
+              </div>
             );
           })}
         </div>

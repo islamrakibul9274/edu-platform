@@ -10,7 +10,7 @@ export default function LogoutButton({ variant = "outline", className = "" }: { 
       variant={variant}
       size="sm"
       onClick={() => signOut({ callbackUrl: '/' })}
-      className={`text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-colors border-slate-200/80 ${className}`}
+      className={`text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 border-zinc-800 text-xs transition-colors ${className}`}
     >
       <LogOut className="w-3.5 h-3.5 mr-1.5" />
       Sign Out

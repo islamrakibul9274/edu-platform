@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { GraduationCap, Eye, EyeOff, CheckCircle2, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
+import { Terminal, Eye, EyeOff, ShieldCheck, Check } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -32,7 +31,7 @@ export default function RegisterPage() {
         router.push("/login?registered=true");
       } else {
         const data = await res.json();
-        setError(data.message || "Registration failed. Please try again.");
+        setError(data.message || "Registration failed. Please check inputs.");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -42,120 +41,117 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-[85vh] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-5xl rounded-3xl bg-white border border-slate-200/80 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+    <main className="min-h-[85vh] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#09090b]">
+      <div className="w-full max-w-4xl rounded-2xl bg-[#111114] border border-zinc-800 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         
-        {/* Left Column: Visual Showcase */}
-        <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 text-white relative overflow-hidden">
-          <div className="relative z-10 space-y-6">
+        {/* Left Column: Specs */}
+        <div className="hidden lg:flex flex-col justify-between p-10 bg-zinc-950 border-r border-zinc-850 text-zinc-100 relative">
+          <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <GraduationCap className="w-6 h-6" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-mono font-bold text-xs">
+                <Terminal className="w-4 h-4 text-zinc-950" />
               </div>
-              <span className="font-black text-2xl tracking-tight">EduPlatform.</span>
+              <span className="font-bold text-base tracking-tight">EduPlatform</span>
             </Link>
 
-            <div className="pt-8 space-y-3">
-              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">
-                Start Learning Today
+            <div className="pt-6 space-y-2">
+              <span className="mono-tag text-zinc-500">
+                DEVELOPER REGISTRATION
               </span>
-              <h2 className="text-3xl font-black leading-tight tracking-tight">
-                Join a global network of ambitious engineers.
+              <h2 className="text-xl font-bold tracking-tight text-white">
+                Initialize your engineering profile.
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Create your student profile in seconds. Unlock all course preview lectures, track your milestones, and graduate with industry-recognized certificates.
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Unlock full access to production tracks, stream high-definition lectures, and build verifiable credentials.
               </p>
             </div>
 
-            <div className="space-y-3 pt-4 text-xs text-slate-300">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Zero tuition or subscription fees for core tracks</span>
+            <div className="space-y-2.5 pt-2 text-xs font-mono text-zinc-400">
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Zero subscription fee for open tracks</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Step-by-step full-stack and AI project repositories</span>
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Real GitHub repository starter code & solution branches</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Direct access to community discussions and peer reviews</span>
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Verifiable cryptographic certificate signing</span>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 pt-8 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
-            <span>© {new Date().getFullYear()} EduPlatform LMS</span>
-            <span className="flex items-center gap-1 text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-blue-400" /> GDPR & Privacy Protected
+          <div className="pt-6 border-t border-zinc-900 text-[11px] font-mono text-zinc-600 flex items-center justify-between">
+            <span>© {new Date().getFullYear()} EDUPLATFORM</span>
+            <span className="flex items-center gap-1 text-zinc-500">
+              <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" /> PRIVACY_GUARANTEED
             </span>
           </div>
-
-          {/* Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
         </div>
 
         {/* Right Column: Form */}
-        <div className="p-8 sm:p-12 flex flex-col justify-center">
+        <div className="p-8 sm:p-10 flex flex-col justify-center bg-[#111114]">
           
-          <div className="mb-6 space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Create your account</h1>
-            <p className="text-sm text-slate-500">
-              Start your journey into production full-stack engineering and AI.
+          <div className="mb-6 space-y-1">
+            <h1 className="text-xl font-bold text-white tracking-tight">Create engineer profile</h1>
+            <p className="text-xs text-zinc-400">
+              Set up your account to start learning.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             
             <div className="space-y-1.5">
-              <Label htmlFor="name" className="text-xs font-bold text-slate-700">Full Name</Label>
+              <Label htmlFor="name" className="mono-tag text-zinc-400">FULL NAME</Label>
               <Input
                 id="name"
-                placeholder="Jane Doe"
+                placeholder="Alex Vance"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-11 rounded-xl bg-slate-50 border-slate-200 focus:bg-white text-sm"
+                className="h-10 rounded-lg bg-zinc-950 border-zinc-800 focus:border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-600"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-xs font-bold text-slate-700">Email Address</Label>
+              <Label htmlFor="email" className="mono-tag text-zinc-400">EMAIL</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder="alex@example.com"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="h-11 rounded-xl bg-slate-50 border-slate-200 focus:bg-white text-sm"
+                className="h-10 rounded-lg bg-zinc-950 border-zinc-800 focus:border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-600"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-xs font-bold text-slate-700">Password</Label>
+              <Label htmlFor="password" className="mono-tag text-zinc-400">PASSWORD (MIN 6 CHARS)</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Minimum 6 characters"
+                  placeholder="••••••••"
                   required
                   minLength={6}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="h-11 rounded-xl bg-slate-50 border-slate-200 focus:bg-white text-sm pr-10"
+                  className="h-10 rounded-lg bg-zinc-950 border-zinc-800 focus:border-zinc-700 text-xs text-zinc-200 pr-9"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-medium text-red-600">
+              <div className="p-2.5 rounded-lg bg-red-950/40 border border-red-900/60 text-xs font-mono text-red-400">
                 {error}
               </div>
             )}
@@ -163,17 +159,17 @@ export default function RegisterPage() {
             <Button
               disabled={loading}
               type="submit"
-              className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-md transition-all mt-2"
+              className="w-full h-10 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg transition-all mt-2"
             >
-              {loading ? "Creating your account..." : "Sign Up Free"}
+              {loading ? "Creating Profile..." : "Initialize Account"}
             </Button>
 
           </form>
 
-          <div className="mt-8 text-center text-xs text-slate-500 pt-6 border-t border-slate-100">
+          <div className="mt-8 text-center text-xs text-zinc-500 pt-5 border-t border-zinc-850">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 font-bold hover:underline">
-              Sign in here
+            <Link href="/login" className="text-zinc-300 font-medium hover:underline">
+              Sign in
             </Link>
           </div>
 

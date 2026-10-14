@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { 
   ArrowRight, 
-  Sparkles, 
-  CheckCircle2, 
+  Terminal, 
+  Check, 
   Star, 
-  Users, 
-  Award, 
-  PlayCircle, 
+  Clock, 
   Code2, 
   BrainCircuit, 
   BarChart3, 
@@ -14,8 +12,9 @@ import {
   Smartphone, 
   Palette,
   ShieldCheck,
-  Zap,
-  BookOpen
+  Cpu,
+  Layers,
+  Award
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,214 +25,209 @@ export default async function Home() {
   await connectToDatabase();
   const featuredCourses = await Course.find({}).limit(3).lean();
 
-  const categories = [
-    { title: "Full-Stack Development", icon: Code2, count: "12 Courses", color: "from-blue-500 to-indigo-600", desc: "Next.js 16, React 19, Node.js, GraphQL & scalable APIs" },
-    { title: "Artificial Intelligence", icon: BrainCircuit, count: "8 Courses", color: "from-purple-500 to-pink-600", desc: "Computer Vision, YOLOv8, PyTorch, LLMs & Neural Networks" },
-    { title: "Data Science & ML", icon: BarChart3, count: "10 Courses", color: "from-emerald-500 to-teal-600", desc: "Pandas, NumPy, Scikit-Learn, Predictive Modeling & Dashboards" },
-    { title: "Cloud & DevOps", icon: Cloud, count: "7 Courses", color: "from-sky-500 to-blue-600", desc: "Kubernetes, Docker, ArgoCD, Terraform & Microservices" },
-    { title: "Mobile Engineering", icon: Smartphone, count: "6 Courses", color: "from-amber-500 to-orange-600", desc: "React Native, Expo 52, iOS & Android Native Architecture" },
-    { title: "UI/UX & Design Systems", icon: Palette, count: "9 Courses", color: "from-rose-500 to-red-600", desc: "Tailwind v4, Figma Tokens, Accessibility & Micro-Interactions" },
+  const tracks = [
+    { title: "Full-Stack Web Architecture", icon: Code2, count: "12 Curricula", desc: "Next.js 16, React 19, Turbopack, Server Actions & distributed DB models." },
+    { title: "Computer Vision & Perception", icon: BrainCircuit, count: "8 Curricula", desc: "YOLOv8, PyTorch, Real-time ByteTrack, segmentation and TensorRT export." },
+    { title: "Data Science & Machine Learning", icon: BarChart3, count: "10 Curricula", desc: "High-performance Pandas vectorization, Scikit-Learn pipelines & analytics." },
+    { title: "Cloud Native & DevOps", icon: Cloud, count: "7 Curricula", desc: "Self-healing Kubernetes clusters, Docker security, Helm & ArgoCD GitOps." },
+    { title: "Mobile Systems Engineering", icon: Smartphone, count: "6 Curricula", desc: "React Native, Expo 52 file-based routing, gesture handlers & SQLite persistence." },
+    { title: "Design Systems & UI Engineering", icon: Palette, count: "9 Curricula", desc: "Tailwind CSS v4 tokens, accessible Radix UI primitives & 60FPS interactions." },
   ];
 
   const testimonials = [
     {
-      name: "Marcus Aurelius Vance",
-      role: "Senior Software Engineer @ FinTech",
+      name: "Marcus Vance",
+      role: "Staff Engineer @ FinTech Core",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-      content: "The Next.js 16 course here is fundamentally different from generic courses. The focus on real architecture, Server Actions, and MongoDB performance gave me immediate confidence at work.",
-      course: "Next.js 16 & React 19 Mastery"
+      content: "The Next.js 16 architecture track eliminated the guesswork around Server Components and MongoDB connection pooling in high-concurrency environments.",
+      track: "Next.js 16 Full-Stack"
     },
     {
       name: "Devon Clark",
-      role: "Machine Learning Engineer",
+      role: "Vision Pipeline Engineer",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
-      content: "The YOLOv8 computer vision pipeline with real TensorRT export was the exact production skill set I needed. The curriculum structure and certificate were instrumental.",
-      course: "Computer Vision with YOLOv8"
+      content: "The YOLOv8 course went straight to the production metal — dataset preparation, edge quantization, and TensorRT inference at 60 FPS.",
+      track: "Computer Vision with YOLOv8"
     },
     {
       name: "Aria Montgomery",
-      role: "Staff Platform Architect",
+      role: "Cloud Platform Architect",
       avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
-      content: "Top quality pedagogy. Deep, hands-on, zero fluff. The interactive student discussions and verifiable completion credentials make this platform stand out.",
-      course: "Cloud Native DevOps & Kubernetes"
+      content: "Finally an LMS that treats students like engineers. Clean syllabus, verifiable completion certificates, and zero hand-waving.",
+      track: "Cloud Native & Kubernetes"
     }
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#09090b] text-zinc-100">
       
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32 bg-radial from-blue-50/60 via-slate-50 to-slate-50">
+      {/* 1. HERO SECTION - Technical Minimalist 2026 */}
+      <section className="relative overflow-hidden pt-18 pb-24 lg:pt-28 lg:pb-32 bg-tech-grid border-b border-zinc-850">
         
-        {/* Subtle background glow effect */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-blue-400/15 via-indigo-400/20 to-violet-400/15 blur-3xl pointer-events-none rounded-full" />
+        {/* Subtle radial spotlight (monochrome neutral) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-white/[0.03] blur-3xl pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center space-y-6 max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto text-center space-y-6">
             
-            {/* Announcement Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold shadow-xs animate-in fade-in slide-in-from-bottom-2">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600 animate-spin" />
-              <span>Next-Gen Software Engineering LMS • 2026 Edition</span>
+            {/* Minimalist Monospace Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>PRODUCTION LMS // 2026 COHORT</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight text-slate-900 leading-[1.1]">
-              Master Real-World Engineering. <br />
-              <span className="gradient-text">Build the Future.</span>
+            {/* High-Impact Headline */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08]">
+              Engineering curricula <br />
+              <span className="text-zinc-400 font-normal">built for developers who ship.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Step beyond basic tutorials. Build production SaaS apps, train computer vision models, deploy self-healing Kubernetes clusters, and earn verifiable industry credentials.
+            <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+              Step beyond toy projects. Architect production SaaS applications, train real-time perception models, orchestrate Kubernetes clusters, and earn cryptographic credentials.
             </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button asChild size="lg" className="w-full sm:w-auto h-13 px-8 text-base bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-102">
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
+              <Button asChild size="lg" className="w-full sm:w-auto h-11 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg shadow-sm">
                 <Link href="/courses">
-                  Explore Course Catalog
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  Explore Curricula
+                  <ArrowRight className="w-3.5 h-3.5 ml-2" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto h-13 px-8 text-base bg-white/80 hover:bg-white text-slate-800 border-slate-300/80 shadow-xs">
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto h-11 px-6 bg-zinc-900/80 border-zinc-800 text-zinc-300 hover:bg-zinc-850 hover:text-white font-medium text-xs rounded-lg">
                 <Link href="/dashboard">
                   Student Dashboard
                 </Link>
               </Button>
             </div>
 
-            {/* Trust points */}
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-6 text-xs font-medium text-slate-500">
+            {/* Trust specs */}
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-mono text-zinc-500">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Free Preview Lessons Available
+                <Check className="w-3.5 h-3.5 text-zinc-300" /> Free Lesson Previews
               </span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-blue-500" /> Tamper-Proof Digital Certificates
+                <Check className="w-3.5 h-3.5 text-zinc-300" /> Verifiable Certificates
               </span>
               <span className="flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-amber-500" /> Live Interactive Video Player
+                <Check className="w-3.5 h-3.5 text-zinc-300" /> Community Q&A
               </span>
             </div>
 
           </div>
 
-          {/* KPI Metrics Strip */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-              <div className="text-3xl lg:text-4xl font-extrabold text-slate-900">15,000+</div>
-              <p className="text-xs font-medium text-slate-500 mt-1">Active Software Engineers</p>
+          {/* Metric Bento Strip */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+            <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 text-center">
+              <div className="font-mono text-2xl lg:text-3xl font-bold text-white">15,420</div>
+              <p className="mono-tag text-zinc-500 mt-1">Active Engineers</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-              <div className="text-3xl lg:text-4xl font-extrabold text-blue-600">4.92 ★</div>
-              <p className="text-xs font-medium text-slate-500 mt-1">Average Course Rating</p>
+            <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 text-center">
+              <div className="font-mono text-2xl lg:text-3xl font-bold text-emerald-400">4.92 / 5.0</div>
+              <p className="mono-tag text-zinc-500 mt-1">Instructor Score</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-              <div className="text-3xl lg:text-4xl font-extrabold text-emerald-600">98%</div>
-              <p className="text-xs font-medium text-slate-500 mt-1">Course Satisfaction Rate</p>
+            <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 text-center">
+              <div className="font-mono text-2xl lg:text-3xl font-bold text-white">98.4%</div>
+              <p className="mono-tag text-zinc-500 mt-1">Completion Index</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-              <div className="text-3xl lg:text-4xl font-extrabold text-violet-600">100%</div>
-              <p className="text-xs font-medium text-slate-500 mt-1">Hands-on Real Projects</p>
+            <div className="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 text-center">
+              <div className="font-mono text-2xl lg:text-3xl font-bold text-zinc-300">100%</div>
+              <p className="mono-tag text-zinc-500 mt-1">Real Repo Projects</p>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* 2. FEATURED COURSES SHOWCASE */}
-      <section className="py-20 bg-white border-y border-slate-200/60">
+      {/* 2. FEATURED COURSES - Bento Grid */}
+      <section className="py-20 bg-[#09090b] border-b border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">
-                <Sparkles className="w-3.5 h-3.5" /> Featured Tracks
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                Trending Engineering Courses
+              <span className="mono-tag text-zinc-500">FEATURED TRACKS</span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+                Core Production Curricula
               </h2>
-              <p className="text-slate-600 mt-2 text-base">
-                Curated curriculum designed by staff engineers to bring you from intermediate to senior mastery.
-              </p>
             </div>
-            <Button asChild variant="outline" className="self-start md:self-auto border-slate-300">
+            <Button asChild variant="outline" size="sm" className="self-start sm:self-auto border-zinc-800 text-zinc-300 hover:text-white bg-zinc-900 text-xs">
               <Link href="/courses">
-                View All {featuredCourses.length > 0 ? "Courses" : "Catalog"}
-                <ArrowRight className="w-4 h-4 ml-1.5" />
+                View Full Catalog ({featuredCourses.length > 0 ? "6 Tracks" : "All"})
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
               </Link>
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {featuredCourses.map((course: any) => {
-              const levelColor = 
-                course.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                course.level === 'Intermediate' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                'bg-purple-50 text-purple-700 border-purple-200';
+              const levelDot = 
+                course.level === 'Beginner' ? 'bg-emerald-400' :
+                course.level === 'Intermediate' ? 'bg-amber-400' : 'bg-sky-400';
 
               return (
-                <Card 
+                <div 
                   key={course._id.toString()} 
-                  className="group overflow-hidden rounded-2xl border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300 flex flex-col bg-white"
+                  className="obsidian-card rounded-xl overflow-hidden flex flex-col justify-between group"
                 >
                   {/* Thumbnail Banner */}
-                  <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
-                    <img 
-                      src={course.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"} 
-                      alt={course.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-                    
-                    <span className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-md border backdrop-blur-md shadow-xs ${levelColor}`}>
-                      {course.level}
-                    </span>
+                  <div>
+                    <div className="relative aspect-video w-full overflow-hidden bg-zinc-900">
+                      <img 
+                        src={course.thumbnail || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80"} 
+                        alt={course.title}
+                        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300 grayscale-20 contrast-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#111114] via-transparent to-transparent" />
+                      
+                      {/* Monospace Level Tag */}
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-950/80 border border-zinc-800 text-zinc-300 mono-tag">
+                        <span className={`w-1.5 h-1.5 rounded-full ${levelDot}`}></span>
+                        {course.level}
+                      </div>
 
-                    <span className="absolute bottom-3 left-3 text-xs font-medium text-white/90 bg-slate-900/80 px-2 py-0.5 rounded">
-                      {course.category || "Engineering"}
-                    </span>
+                      <div className="absolute bottom-3 left-3 text-zinc-300 mono-tag bg-zinc-950/80 px-2 py-0.5 rounded border border-zinc-850">
+                        {course.category}
+                      </div>
 
-                    <span className="absolute bottom-3 right-3 text-xs font-medium text-white/90 flex items-center gap-1 bg-slate-900/80 px-2 py-0.5 rounded">
-                      <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {course.rating || 4.9}
-                    </span>
-                  </div>
+                      <div className="absolute bottom-3 right-3 text-zinc-300 mono-tag flex items-center gap-1 bg-zinc-950/80 px-2 py-0.5 rounded border border-zinc-850">
+                        <Star className="w-3 h-3 text-zinc-300 fill-zinc-300" /> {course.rating || 4.9}
+                      </div>
+                    </div>
 
-                  {/* Body Content */}
-                  <CardContent className="p-6 flex flex-col flex-1 justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                    {/* Content */}
+                    <div className="p-5 space-y-2">
+                      <h3 className="text-base font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
                         {course.title}
                       </h3>
-                      <p className="text-sm text-slate-600 mt-2 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                         {course.description}
                       </p>
                     </div>
+                  </div>
 
-                    <div className="mt-6 pt-4 border-t border-slate-100 space-y-4">
-                      {/* Instructor & Meta */}
-                      <div className="flex items-center justify-between text-xs text-slate-500">
-                        <div className="flex items-center gap-2">
-                          <img 
-                            src={course.instructor?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"} 
-                            alt={course.instructor?.name || "Instructor"} 
-                            className="w-6 h-6 rounded-full object-cover"
-                          />
-                          <span className="font-medium text-slate-700">{course.instructor?.name || "Senior Instructor"}</span>
-                        </div>
-                        <span>{course.duration || "8h 30m"}</span>
+                  {/* Footer strip */}
+                  <div className="p-5 pt-0 border-t border-zinc-850/80 mt-4 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-zinc-400 pt-3">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src={course.instructor?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"} 
+                          alt="Instructor" 
+                          className="w-5 h-5 rounded-full object-cover"
+                        />
+                        <span className="text-zinc-300 text-xs">{course.instructor?.name || "Senior Instructor"}</span>
                       </div>
-
-                      {/* CTA Button */}
-                      <Button asChild className="w-full bg-slate-900 hover:bg-blue-600 text-white transition-colors group-hover:shadow-md">
-                        <Link href={`/courses/${course._id.toString()}`}>
-                          View Curriculum
-                          <ArrowRight className="w-4 h-4 ml-1.5" />
-                        </Link>
-                      </Button>
+                      <span className="font-mono text-[11px] text-zinc-400">{course.duration}</span>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    <Button asChild size="sm" className="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 hover:text-white text-xs font-semibold rounded-lg">
+                      <Link href={`/courses/${course._id.toString()}`}>
+                        Access Track
+                        <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -241,47 +235,51 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 3. TRACK CATEGORIES */}
-      <section className="py-20 bg-slate-50">
+      {/* 3. TRACK DOMAINS - Precision Bento Grid */}
+      <section className="py-20 bg-[#09090b] border-b border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Explore Industry Learning Tracks
+          <div className="max-w-2xl mb-12">
+            <span className="mono-tag text-zinc-500">DISCIPLINES</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+              Engineering Disciplines
             </h2>
-            <p className="text-slate-600 text-base">
-              Choose your domain and master modern engineering workflows from architecture to deployment.
+            <p className="text-zinc-400 text-xs sm:text-sm mt-1">
+              Full pipelines covering foundational theory through to bare-metal optimization.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((cat, idx) => {
-              const Icon = cat.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tracks.map((t, idx) => {
+              const Icon = t.icon;
               return (
                 <Link 
                   key={idx} 
                   href="/courses"
-                  className="group p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+                  className="obsidian-card p-5 rounded-xl flex flex-col justify-between group"
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
-                        <Icon className="w-6 h-6" />
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 group-hover:text-white transition-colors">
+                        <Icon className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
-                        {cat.count}
+                      <span className="mono-tag text-zinc-400">
+                        {t.count}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {cat.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                      {cat.desc}
-                    </p>
+                    <div>
+                      <h3 className="text-sm font-bold text-white group-hover:text-zinc-200 transition-colors">
+                        {t.title}
+                      </h3>
+                      <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                        {t.desc}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="mt-6 flex items-center text-xs font-semibold text-blue-600 group-hover:translate-x-1 transition-transform">
-                    Explore track <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                  <div className="mt-4 pt-3 border-t border-zinc-850/80 flex items-center justify-between text-xs mono-tag text-zinc-400 group-hover:text-zinc-200">
+                    <span>EXPLORE SYLLABUS</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               );
@@ -291,54 +289,47 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4. LEARNING METHODOLOGY / HOW IT WORKS */}
-      <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* 4. METHODOLOGY ROADMAP */}
+      <section className="py-20 bg-[#0c0c0e] border-b border-zinc-850">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-blue-400 text-xs font-semibold uppercase tracking-wider">Methodology</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              Engineered For Deep Mastery
+          <div className="max-w-xl mb-12">
+            <span className="mono-tag text-zinc-500">LEARNING ARCHITECTURE</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+              Engineered For Retention
             </h2>
-            <p className="text-slate-400 text-base">
-              A structured four-step journey built around real development workflows rather than passive video consumption.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/80 relative">
-              <span className="text-4xl font-black text-blue-500/30 absolute top-4 right-4">01</span>
-              <BookOpen className="w-8 h-8 text-blue-400 mb-4" />
-              <h3 className="text-lg font-bold mb-2">Curated Curriculum</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Step-by-step modular lessons covering real production use cases and architectural tradeoffs.
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 space-y-2">
+              <span className="mono-tag text-zinc-500 block">PHASE 01</span>
+              <h3 className="text-sm font-bold text-white">Syllabus Breakdown</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Clear modular checkpoints with real architecture design diagrams and setup checklists.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/80 relative">
-              <span className="text-4xl font-black text-indigo-500/30 absolute top-4 right-4">02</span>
-              <PlayCircle className="w-8 h-8 text-indigo-400 mb-4" />
-              <h3 className="text-lg font-bold mb-2">Interactive Player</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                High-definition video playback with speed controls, syllabus navigation, and free lesson previews.
+            <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 space-y-2">
+              <span className="mono-tag text-zinc-500 block">PHASE 02</span>
+              <h3 className="text-sm font-bold text-white">Interactive Studio</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Video lecture player with dynamic module switcher, speed controls, and code snippets.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/80 relative">
-              <span className="text-4xl font-black text-purple-500/30 absolute top-4 right-4">03</span>
-              <Users className="w-8 h-8 text-purple-400 mb-4" />
-              <h3 className="text-lg font-bold mb-2">Community Q&A</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Ask questions right on the lesson page, get answers from instructors and collaborate with peers.
+            <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 space-y-2">
+              <span className="mono-tag text-zinc-500 block">PHASE 03</span>
+              <h3 className="text-sm font-bold text-white">Peer & Instructor Q&A</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Direct in-classroom discussion board for resolving edge cases and debugging hurdles.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/80 relative">
-              <span className="text-4xl font-black text-emerald-500/30 absolute top-4 right-4">04</span>
-              <Award className="w-8 h-8 text-emerald-400 mb-4" />
-              <h3 className="text-lg font-bold mb-2">Verified Credential</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Complete all modules and automatically generate a digital certificate with verification ID.
+            <div className="p-5 rounded-xl bg-zinc-900/50 border border-zinc-800 space-y-2">
+              <span className="mono-tag text-zinc-500 block">PHASE 04</span>
+              <h3 className="text-sm font-bold text-white">Verified Credential</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Automatic generation of verifiable digital certificates with unique serial numbers.
               </p>
             </div>
           </div>
@@ -347,37 +338,31 @@ export default async function Home() {
       </section>
 
       {/* 5. TESTIMONIALS */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#09090b] border-b border-zinc-850">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Trusted by Engineers Worldwide
+          <div className="max-w-xl mb-12">
+            <span className="mono-tag text-zinc-500">DISPATCHES</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+              Field Reports
             </h2>
-            <p className="text-slate-600 text-base">
-              Hear from developers building production systems after completing our courses.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+              <div key={i} className="obsidian-card p-5 rounded-xl flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-1 text-amber-400 mb-4">
-                    {[...Array(5)].map((_, starIdx) => (
-                      <Star key={starIdx} className="w-4 h-4 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-sm text-slate-700 italic leading-relaxed">
+                  <div className="mono-tag text-zinc-500 mb-3">{t.track}</div>
+                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
                     "{t.content}"
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-3">
-                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
+                <div className="mt-6 pt-3 border-t border-zinc-850 flex items-center gap-3">
+                  <img src={t.avatar} alt={t.name} className="w-8 h-8 rounded-full object-cover grayscale" />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">{t.name}</h4>
-                    <p className="text-xs text-slate-500">{t.role}</p>
+                    <h4 className="text-xs font-bold text-white">{t.name}</h4>
+                    <p className="text-[11px] text-zinc-400">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -387,21 +372,28 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 6. CALL TO ACTION BANNER */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">
-            Ready to Accelerate Your Career?
+      {/* 6. CALL TO ACTION - Minimalist Terminal style */}
+      <section className="py-18 bg-[#0c0c0e]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-zinc-900 border border-zinc-800 mono-tag text-zinc-400">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>READY TO SHIP PRODUCTION CODE</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            Start mastering modern engineering today.
           </h2>
-          <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-            Join thousands of developers leveling up their full-stack, AI, and DevOps skills. Start learning today.
+
+          <p className="text-sm text-zinc-400 max-w-lg mx-auto">
+            Zero subscription walls for core tracks. Join thousands of developers building scalable systems.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-slate-100 font-bold px-8 shadow-md">
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Button asChild size="lg" className="h-10 px-6 bg-zinc-100 text-zinc-950 hover:bg-zinc-200 font-semibold text-xs rounded-lg">
               <Link href="/register">Create Free Account</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10 px-8">
-              <Link href="/courses">Browse Catalog</Link>
+            <Button asChild size="lg" variant="outline" className="h-10 px-6 bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white text-xs rounded-lg">
+              <Link href="/courses">Browse Curricula</Link>
             </Button>
           </div>
         </div>
